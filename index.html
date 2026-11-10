@@ -61,7 +61,7 @@
             transform: scale(1.03);
         }
 
-        /* Przyciski w prawym górnym rogu (Koszyk) */
+        /* Koszyk w prawym górnym rogu */
         .cart-top-right {
             position: fixed;
             top: 20px;
@@ -169,7 +169,7 @@
         .product-card h3 { color: #1a1a2e; margin: 0 0 8px 0; font-size: 1.2em; }
         .product-card .price { font-size: 1.3em; font-weight: bold; color: #2e7d32; margin-top: 10px; }
 
-        /* Widok szczegółów produktu */
+        /* Szczegóły produktu */
         #detail-screen {
             display: none;
             max-width: 1100px;
@@ -215,8 +215,8 @@
         }
         .btn-add-cart:hover { background-color: #e6b800; }
 
-        /* Okna Logowania, Koszyka i Admina */
-        #auth-screen, #cart-screen, #admin-screen { 
+        /* Okna systemowe (Logowanie, Koszyk, Płatność, Admin) */
+        #auth-screen, #cart-screen, #payment-screen, #admin-screen { 
             display: none; 
             max-width: 750px; 
             margin: 40px auto; 
@@ -240,14 +240,42 @@
             font-size: 1em;
         }
 
-        .cart-item, .user-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; padding: 15px 0; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; padding: 15px 0; }
         .payment-methods { margin-top: 35px; text-align: center; }
-        .pay-btn { padding: 14px 25px; margin: 8px; font-size: 1.05em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; }
-        .btn-blik { background-color: #eb1260; color: #fff; }
-        .btn-paypal { background-color: #003087; color: #fff; }
-        .btn-card { background-color: #2e7d32; color: #fff; }
-        .btn-delete { background: #d32f2f; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
-        .btn-grant { background: #0288d1; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; margin-right: 5px; }
+        .pay-btn { padding: 14px 25px; margin: 8px; font-size: 1.05em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: #fff; }
+        .btn-blik { background-color: #eb1260; }
+        .btn-paypal { background-color: #003087; }
+        .btn-card { background-color: #2e7d32; }
+
+        /* Stylizowana sekcja zarządzania użytkownikami w panelu admina */
+        .admin-user-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+        .user-info-text strong { color: #1a1a2e; font-size: 1.1em; }
+        .user-badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #0288d1;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+        .admin-action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-delete { background: #d32f2f; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-grant { background: #0288d1; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
         .back-btn { background-color: #e0e0e0; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; }
         .back-btn:hover { background-color: #d0d0d0; }
@@ -257,10 +285,10 @@
 </head>
 <body>
 
-    <!-- Lewy górny róg: Zaloguj się (biały) i Zarejestruj się (niebieski) -->
+    <!-- Lewy górny róg: Przyciski Konta -->
     <div class="auth-top-left" id="auth-buttons-container">
-        <button class="btn-login-white" id="btn-login-main" onclick="otworzLogowanie()">Zaloguj się</button>
-        <button class="btn-register-blue" id="btn-register-main" onclick="otworzRejestracje()">Zarejestruj się</button>
+        <button class="btn-login-white" onclick="otworzLogowanie()">Zaloguj się</button>
+        <button class="btn-register-blue" onclick="otworzRejestracje()">Zarejestruj się</button>
     </div>
 
     <!-- Prawy górny róg: Koszyk -->
@@ -312,6 +340,10 @@
                 <label for="auth-password">Hasło:</label>
                 <input type="password" id="auth-password" placeholder="Wpisz hasło...">
             </div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="remember-me" style="width: auto;">
+                <label for="remember-me" style="margin-bottom: 0; cursor: pointer;">Zapamiętaj mnie na tym urządzeniu</label>
+            </div>
             
             <button class="btn-primary" id="auth-submit-btn" style="width: 100%; border-radius: 8px;" onclick="obsluzFormularzAuth()">Zaloguj się</button>
         </div>
@@ -330,12 +362,23 @@
 
             <div class="payment-methods" id="payment-section" style="display: none;">
                 <h3>Wybierz metodę płatności:</h3>
-                <button class="pay-btn btn-blik" onclick="finalizujZakup('BLIK')">BLIK</button>
-                <button class="pay-btn btn-paypal" onclick="finalizujZakup('PayPal')">PayPal</button>
-                <button class="pay-btn btn-card" onclick="finalizujZakup('Karta Bankowa')">Karta Płatnicza</button>
+                <button class="pay-btn btn-blik" onclick="przygotujPlatnosc('BLIK')">Zapłać BLIK</button>
+                <button class="pay-btn btn-paypal" onclick="przygotujPlatnosc('PayPal')">Zapłać PayPal</button>
+                <button class="pay-btn btn-card" onclick="przygotujPlatnosc('Karta Bankowa')">Karta Płatnicza</button>
             </div>
         </div>
         <button class="back-btn" onclick="pokazSklep()">← Kontynuuj zakupy</button>
+    </div>
+
+    <!-- 5.1. EKRAN WPISYWANIA DANYCH PŁATNOŚCI -->
+    <div id="payment-screen">
+        <div class="custom-box">
+            <h2 id="payment-title" style="color: #1a1a2e; margin-top: 0;">Finalizacja płatności 💳</h2>
+            <p id="payment-subtitle" style="color: #666; margin-bottom: 25px;"></p>
+            
+            <div id="payment-form-container"></div>
+        </div>
+        <button class="back-btn" onclick="pokazKoszyk()">← Wróć do koszyka</button>
     </div>
 
     <!-- 6. PANEL ADMINISTRATORA / PRACOWNIKA -->
@@ -345,32 +388,23 @@
             <p style="color: #666;">Zalogowano jako: <strong id="admin-user-display">Admin</strong></p>
 
             <h3 style="margin-top: 25px;">Dodaj nowy produkt:</h3>
-            <div class="form-group">
-                <input type="text" id="admin-name" placeholder="Nazwa przedmiotu">
-            </div>
-            <div class="form-group">
-                <input type="number" id="admin-price" placeholder="Cena w zł">
-            </div>
-            <div class="form-group">
-                <input type="number" id="admin-stock" placeholder="Stan magazynowy (szt.)">
-            </div>
-            <div class="form-group">
-                <input type="text" id="admin-image" placeholder="Link do zdjęcia (URL)">
-            </div>
-            <div class="form-group">
-                <textarea id="admin-desc" placeholder="Opis produktu..."></textarea>
-            </div>
+            <div class="form-group"><input type="text" id="admin-name" placeholder="Nazwa przedmiotu"></div>
+            <div class="form-group"><input type="number" id="admin-price" placeholder="Cena w zł"></div>
+            <div class="form-group"><input type="number" id="admin-stock" placeholder="Stan magazynowy (szt.)"></div>
+            <div class="form-group"><input type="text" id="admin-image" placeholder="Link do zdjęcia (URL)"></div>
+            <div class="form-group"><textarea id="admin-desc" placeholder="Opis produktu..."></textarea></div>
             <button class="btn-primary" style="width: 100%; border-radius: 8px; background-color: #2e7d32; color: #fff;" onclick="dodajNowyProduktAdmin()">+ Dodaj produkt do sklepu</button>
 
             <hr style="margin: 30px 0; border: none; border-top: 1px solid #ccc;">
 
             <div id="admin-users-management-section">
-                <h3>Zarządzaj Użytkownikami i Uprawnieniami:</h3>
+                <h3 style="margin-bottom: 5px;">Zarządzaj użytkownikami i uprawnieniami</h3>
+                <p style="color: #666; font-size: 0.95em; margin-bottom: 20px;">Możesz nadawać uprawnienia pracownicze lub usuwać niepożądane konta.</p>
                 <div id="admin-users-list"></div>
                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #ccc;">
             </div>
 
-            <h3>Usuń produkty z oferty:</h3>
+            <h3>Zarządzaj produktami w sklepie:</h3>
             <div id="admin-products-list"></div>
         </div>
         <button class="back-btn" onclick="pokazSklep()">← Wyjdź z panelu</button>
@@ -381,16 +415,12 @@
     </footer>
 
     <script>
-        // Baza użytkowników
-        let uzytkownicy = [
+        // TRWAŁOŚĆ DANYCH (LocalStorage)
+        let uzytkownicy = JSON.parse(localStorage.getItem('tcg_uzytkownicy')) || [
             { username: "admin", password: "admin123", role: "admin" }
         ];
-        
-        let zalogowanyUzytkownik = null;
-        let trybRejestracji = false;
 
-        // BAZA PRODUKTÓW
-        let produkty = [
+        let produkty = JSON.parse(localStorage.getItem('tcg_produkty')) || [
             {
                 id: 1,
                 nazwa: "Elite Trainer Box 30th Anniversary",
@@ -425,10 +455,27 @@
             }
         ];
 
+        let zalogowanyUzytkownik = JSON.parse(localStorage.getItem('tcg_zalogowany')) || null;
+        let trybRejestracji = false;
         let koszyk = [];
         let wyblanyProdukt = null;
+        let wybranaMetodaPlatnosci = '';
 
-        // Otwieranie widoków logowania / rejestracji
+        // Inicjalizacja przycisków konta po załadowaniu
+        aktualizujWidokKonta();
+        aktualizujLicznik();
+
+        function zapiszStan() {
+            localStorage.setItem('tcg_produkty', JSON.stringify(produkty));
+            localStorage.setItem('tcg_uzytkownicy', JSON.stringify(uzytkownicy));
+            if (zalogowanyUzytkownik) {
+                localStorage.setItem('tcg_zalogowany', JSON.stringify(zalogowanyUzytkownik));
+            } else {
+                localStorage.removeItem('tcg_zalogowany');
+            }
+        }
+
+        // Logowanie i Rejestracja
         function otworzLogowanie() {
             trybRejestracji = false;
             document.getElementById('auth-title').innerText = "Zaloguj się do sklepu 🔑";
@@ -450,6 +497,7 @@
         function obsluzFormularzAuth() {
             const userIn = document.getElementById('auth-username').value.trim();
             const passIn = document.getElementById('auth-password').value.trim();
+            const rememberMe = document.getElementById('remember-me').checked;
 
             if (!userIn || !passIn) {
                 alert("Wpisz login oraz hasło!");
@@ -465,6 +513,7 @@
                 const nowyUzytkownik = { username: userIn, password: passIn, role: "user" };
                 uzytkownicy.push(nowyUzytkownik);
                 zalogowanyUzytkownik = nowyUzytkownik;
+                zapiszStan();
                 alert("Konto zostało pomyślnie utworzone!");
             } else {
                 const uzytkownik = uzytkownicy.find(u => u.username.toLowerCase() === userIn.toLowerCase() && u.password === passIn);
@@ -473,6 +522,9 @@
                     return;
                 }
                 zalogowanyUzytkownik = uzytkownik;
+                if (rememberMe) {
+                    zapiszStan();
+                }
                 alert(`Witaj ponownie, ${zalogowanyUzytkownik.username}!`);
             }
 
@@ -489,6 +541,7 @@
 
         function wyloguj() {
             zalogowanyUzytkownik = null;
+            localStorage.removeItem('tcg_zalogowany');
             aktualizujWidokKonta();
             pokazSklep();
         }
@@ -509,8 +562,8 @@
                 }
             } else {
                 container.innerHTML = `
-                    <button class="btn-login-white" id="btn-login-main" onclick="otworzLogowanie()">Zaloguj się</button>
-                    <button class="btn-register-blue" id="btn-register-main" onclick="otworzRejestracje()">Zarejestruj się</button>
+                    <button class="btn-login-white" onclick="otworzLogowanie()">Zaloguj się</button>
+                    <button class="btn-register-blue" onclick="otworzRejestracje()">Zarejestruj się</button>
                 `;
             }
         }
@@ -540,13 +593,14 @@
                 if (u.username === zalogowanyUzytkownik.username) return;
 
                 const div = document.createElement('div');
-                div.className = 'user-item-row';
+                div.className = 'admin-user-card';
                 div.innerHTML = `
-                    <div>
-                        <strong>${u.username}</strong> — Rola: <span style="color: #0288d1; font-weight: bold;">${u.role}</span>
+                    <div class="user-info-text">
+                        <strong>${u.username}</strong><br>
+                        <span class="user-badge">Rola: ${u.role}</span>
                     </div>
-                    <div>
-                        ${u.role === 'user' ? `<button class="btn-grant" onclick="zmienRole('${u.username}', 'worker')">Mianuj Pracownikiem</button>` : `<button class="btn-grant" onclick="zmienRole('${u.username}', 'user')">Zabierz Uprawnienia</button>`}
+                    <div class="admin-action-buttons">
+                        ${u.role === 'user' ? `<button class="btn-grant" onclick="zmienRole('${u.username}', 'worker')">Mianuj Pracownikiem</button>` : `<button class="btn-grant" onclick="zmienRole('${u.username}', 'user')">Odbierz Rolę</button>`}
                         <button class="btn-delete" onclick="usunUzytkownika('${u.username}')">Usuń konto</button>
                     </div>
                 `;
@@ -558,13 +612,15 @@
             const u = uzytkownicy.find(usr => usr.username === username);
             if (u) {
                 u.role = nowaRola;
+                zapiszStan();
                 renderujAdminListaUzytkownikow();
             }
         }
 
         function usunUzytkownika(username) {
-            if (confirm(`Czy na pewno chcesz usunąć użytkownika ${username}?`)) {
+            if (confirm(`Czy na pewno chcesz usunąć konto użytkownika ${username}?`)) {
                 uzytkownicy = uzytkownicy.filter(u => u.username !== username);
+                zapiszStan();
                 renderujAdminListaUzytkownikow();
             }
         }
@@ -583,6 +639,7 @@
 
             const nowyId = produkty.length > 0 ? Math.max(...produkty.map(p => p.id)) + 1 : 1;
             produkty.push({ id: nowyId, nazwa, cena, magazyn, zdjęcie, opis });
+            zapiszStan();
 
             document.getElementById('admin-name').value = '';
             document.getElementById('admin-price').value = '';
@@ -590,13 +647,14 @@
             document.getElementById('admin-image').value = '';
             document.getElementById('admin-desc').value = '';
 
-            alert("Pomyślnie dodano nowy produkt!");
+            alert("Pomyślnie dodano nowy produkt do sklepu!");
             renderujAdminListaProduktow();
         }
 
         function usunProdukt(id) {
             if (confirm("Czy na pewno chcesz usunąć ten produkt ze sklepu?")) {
                 produkty = produkty.filter(p => p.id !== id);
+                zapiszStan();
                 renderujAdminListaProduktow();
             }
         }
@@ -606,10 +664,11 @@
             container.innerHTML = '';
             produkty.forEach(p => {
                 const div = document.createElement('div');
-                div.className = 'user-item-row';
+                div.className = 'admin-user-card';
                 div.innerHTML = `
-                    <div>
-                        <strong>${p.nazwa}</strong> — ${p.cena.toFixed(2)} zł (Stan: ${p.magazyn} szt.)
+                    <div class="user-info-text">
+                        <strong>${p.nazwa}</strong><br>
+                        <span style="color: #2e7d32; font-weight: bold;">${p.cena.toFixed(2)} zł</span> (Stan: ${p.magazyn} szt.)
                     </div>
                     <button class="btn-delete" onclick="usunProdukt(${p.id})">Usuń produkt</button>
                 `;
@@ -649,6 +708,7 @@
             document.getElementById('detail-screen').style.display = 'none';
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('cart-screen').style.display = 'none';
+            document.getElementById('payment-screen').style.display = 'none';
             document.getElementById('admin-screen').style.display = 'none';
         }
 
@@ -788,7 +848,85 @@
             paymentSection.style.display = 'block';
         }
 
-        function finalizujZakup(metoda) {
+        // Nowy system płatności (przejście do wpisywania danych)
+        function przygotujPlatnosc(metoda) {
+            wybranaMetodaPlatnosci = metoda;
+            ukryjEkrany();
+            document.getElementById('payment-screen').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            const title = document.getElementById('payment-title');
+            const subtitle = document.getElementById('payment-subtitle');
+            const container = document.getElementById('payment-form-container');
+
+            title.innerText = `Płatność metodą: ${metoda} 💳`;
+            subtitle.innerText = `Wprowadź wymagane dane, aby sfinalizować zamówienie i opłacić koszyk.`;
+
+            if (metoda === 'BLIK') {
+                container.innerHTML = `
+                    <div class="form-group">
+                        <label for="blik-code">Wpisz 6-cyfrowy kod BLIK:</label>
+                        <input type="text" id="blik-code" maxlength="6" placeholder="np. 123456" style="text-align: center; font-size: 1.5em; letter-spacing: 5px;">
+                    </div>
+                    <button class="btn-primary" style="width: 100%; border-radius: 8px; margin-top: 15px;" onclick="finalizujPlatnosc()">Potwierdź i zapłać BLIK</button>
+                `;
+            } else if (metoda === 'PayPal') {
+                container.innerHTML = `
+                    <div class="form-group">
+                        <label for="paypal-email">Adres e-mail PayPal:</label>
+                        <input type="email" id="paypal-email" placeholder="twoj@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="paypal-pass">Hasło PayPal:</label>
+                        <input type="password" id="paypal-pass" placeholder="••••••••">
+                    </div>
+                    <button class="btn-primary" style="width: 100%; border-radius: 8px; margin-top: 15px;" onclick="finalizujPlatnosc()">Zaloguj i zapłać PayPal</button>
+                `;
+            } else if (metoda === 'Karta Bankowa') {
+                container.innerHTML = `
+                    <div class="form-group">
+                        <label for="card-num">Numer karty:</label>
+                        <input type="text" id="card-num" placeholder="4532 •••• •••• ••••">
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="card-exp">Data ważności:</label>
+                            <input type="text" id="card-exp" placeholder="MM/RR">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="card-cvv">Kod CVV:</label>
+                            <input type="password" id="card-cvv" maxlength="3" placeholder="123">
+                        </div>
+                    </div>
+                    <button class="btn-primary" style="width: 100%; border-radius: 8px; margin-top: 15px;" onclick="finalizujPlatnosc()">Zapłać kartą</button>
+                `;
+            }
+        }
+
+        // Finalizacja po podaniu danych (tutaj dopiero zmniejsza się stan magazynowy!)
+        function finalizujPlatnosc() {
+            // Walidacja danych formularza płatności
+            if (wybranaMetodaPlatnosci === 'BLIK') {
+                const code = document.getElementById('blik-code').value.trim();
+                if (code.length !== 6) {
+                    alert("Kod BLIK musi składać się z dokładnie 6 cyfr!");
+                    return;
+                }
+            } else if (wybranaMetodaPlatnosci === 'PayPal') {
+                const email = document.getElementById('paypal-email').value.trim();
+                if (!email.includes('@')) {
+                    alert("Wpisz poprawny adres e-mail PayPal!");
+                    return;
+                }
+            } else if (wybranaMetodaPlatnosci === 'Karta Bankowa') {
+                const cardNum = document.getElementById('card-num').value.trim();
+                if (cardNum.length < 8) {
+                    alert("Wpisz poprawny numer karty płatniczej!");
+                    return;
+                }
+            }
+
+            // Dopiero teraz pobieramy opłatę i aktualizujemy stan magazynowy!
             koszyk.forEach(itemKoszyka => {
                 const p = produkty.find(prod => prod.id === itemKoszyka.id);
                 if (p) {
@@ -796,8 +934,9 @@
                     if (p.magazyn < 0) p.magazyn = 0;
                 }
             });
+            zapiszStan();
 
-            alert(`Dziękujemy za zamówienie, ${zalogowanyUzytkownik.username}! Wybrano metodę płatności: ${metoda}. Stan magazynowy został zaktualizowany!`);
+            alert(`Płatność pomyślnie autoryzowana (${wybranaMetodaPlatnosci})! Dziękujemy za zamówienie, ${zalogowanyUzytkownik.username}. Stan magazynowy został zaktualizowany.`);
             koszyk = [];
             aktualizujLicznik();
             pokazSklep();
