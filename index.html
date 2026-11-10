@@ -3,29 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCGzone</title>
+    <title>TCGzone - Sklep Pokémon TCG</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #1a1a1a; color: #ffffff; text-align: center; padding: 50px; }
-        h1 { color: #ffcb05; }
-        .card { border: 2px solid #ffcb05; border-radius: 10px; padding: 20px; display: inline-block; margin: 10px; background: #2a2a2a; }
-        .card-btn { background-color: #ffcb05; color: #000; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .card-btn:hover { background-color: #e6b800; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #1a1a1a; 
+            color: #ffffff; 
+            text-align: center; 
+            padding: 40px 20px; 
+            margin: 0;
+        }
+        h1 { color: #ffcb05; font-size: 2.5em; margin-bottom: 10px; }
+        p { color: #ccc; font-size: 1.1em; }
+        
+        /* Ekran startowy */
+        #welcome-screen {
+            margin-top: 80px;
+        }
+        .enter-btn {
+            background-color: #ffcb05;
+            color: #000;
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .enter-btn:hover {
+            background-color: #e6b800;
+            transform: scale(1.05);
+        }
+
+        /* Ekran sklepu */
+        #shop-screen {
+            display: none;
+        }
+        .shop-grid { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 25px; 
+            max-width: 1100px; 
+            margin: 30px auto; 
+        }
+        .product-card { 
+            border: 2px solid #ffcb05; 
+            border-radius: 12px; 
+            padding: 20px; 
+            width: 250px; 
+            background: #2a2a2a; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-card h3 { color: #ffcb05; margin-top: 0; font-size: 1.3em; }
+        .product-card .price { font-size: 1.4em; font-weight: bold; color: #4caf50; margin: 10px 0; }
+        .product-card .desc { font-size: 0.9em; color: #bbb; margin-bottom: 15px; }
+        
+        .buy-btn { 
+            background-color: #ffcb05; 
+            color: #000; 
+            border: none; 
+            padding: 10px 15px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 1em;
+            transition: background 0.2s;
+        }
+        .buy-btn:hover { background-color: #e6b800; }
+        
+        .nav-btn {
+            background-color: #444;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .nav-btn:hover { background-color: #555; }
     </style>
 </head>
 <body>
-    <h1>Witaj w TCGzone!</h1>
-    <p>Moja pierwsza strona o kartach kolekcjonerskich.</p>
-    
-    <div class="card">
-        <h3>Karta #1</h3>
-        <p>Opis i statystyki karty.</p>
-        <button class="card-btn" onclick="alert('Kliknąłeś Kartę nr 1!')">Zobacz kartę</button>
+
+    <!-- Ekran startowy -->
+    <div id="welcome-screen">
+        <h1>TCG Zone</h1>
+        <p>Oficjalny sklep z zestawami i kartami Pokémon TCG!</p>
+        <button class="enter-btn" onclick="otworzSklep()">Wejdź do świata Pokémon</button>
     </div>
 
-    <div class="card">
-        <h3>Karta #2</h3>
-        <p>Opis i statystyki karty.</p>
-        <button class="card-btn" onclick="alert('Kliknąłeś Kartę nr 2!')">Zobacz kartę</button>
+    <!-- Ekran sklepu z asortymentem -->
+    <div id="shop-screen">
+        <h1>Sklep TCGzone</h1>
+        <p>Wybierz swoje zestawy i powiększ swoją kolekcję:</p>
+        
+        <div class="shop-grid">
+            
+            <!-- Produkt 1 -->
+            <div class="product-card">
+                <div>
+                    <h3>Booster Box</h3>
+                    <p class="desc">Fabrycznie zamknięty box zawierający 36 boosterów z nowej serii.</p>
+                </div>
+                <div>
+                    <div class="price">649 zł</div>
+                    <button class="buy-btn" onclick="dodajDoKoszyka('Booster Box')">Kup teraz</button>
+                </div>
+            </div>
+
+            <!-- Produkt 2 -->
+            <div class="product-card">
+                <div>
+                    <h3>Elite Trainer Box (ETB)</h3>
+                    <p class="desc">Zestaw gracza: 9 boosterów, koszulki na karty, kości i pudełko kolekcjonerskie.</p>
+                </div>
+                <div>
+                    <div class="price">229 zł</div>
+                    <button class="buy-btn" onclick="dodajDoKoszyka('Elite Trainer Box')">Kup teraz</button>
+                </div>
+            </div>
+
+            <!-- Produkt 3 -->
+            <div class="product-card">
+                <div>
+                    <h3>Pojedynczy Booster</h3>
+                    <p class="desc">Oryginalna saszetka zawierająca 10 losowych kart + kod do gry online.</p>
+                </div>
+                <div>
+                    <div class="price">21.99 zł</div>
+                    <button class="buy-btn" onclick="dodajDoKoszyka('Pojedynczy Booster')">Kup teraz</button>
+                </div>
+            </div>
+
+        </div>
+
+        <button class="nav-btn" onclick="wrocDoStartu()">Wróć na stronę główną</button>
     </div>
+
+    <script>
+        function otworzSklep() {
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('shop-screen').style.display = 'block';
+        }
+
+        function wrocDoStartu() {
+            document.getElementById('shop-screen').style.display = 'none';
+            document.getElementById('welcome-screen').style.display = 'block';
+        }
+
+        function dodajDoKoszyka(nazwaProduktu) {
+            alert('Dodano do koszyka: ' + nazwaProduktu + '!');
+        }
+    </script>
+
 </body>
 </html>
