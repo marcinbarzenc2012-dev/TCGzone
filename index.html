@@ -325,6 +325,12 @@
         .btn-grant { background: #0288d1; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-save-prod { background: #2e7d32; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         
+        .mic-btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
         .mic-btn {
             background: #ffcb05;
             border: 2px solid #d4a500;
@@ -334,13 +340,28 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 0.95em;
-            margin-top: 8px;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             box-shadow: 0 3px 8px rgba(0,0,0,0.1);
         }
         .mic-btn:hover { background: #e6b800; }
+
+        .accept-btn {
+            background: #2e7d32;
+            border: 2px solid #1b4d20;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        .accept-btn:hover { background: #256628; }
 
         .back-btn { background-color: #e0e0e0; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; }
         .back-btn:hover { background-color: #d0d0d0; }
@@ -449,19 +470,29 @@
     <!-- 6. PANEL ADMINISTRATORA / PRACOWNIKA -->
     <div id="admin-screen">
         <div class="custom-box" style="border-color: #1a1a2e;">
-            <h2 style="color: #1a1a2e; margin-top: 0;">Panel Zarządzania Firmą ⚙️</h2>
-            <p style="color: #666;">Zalogowano jako: <strong id="admin-user-display">Admin</strong></p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h2 style="color: #1a1a2e; margin: 0 0 5px 0;">Panel Zarządzania Firmą ⚙️</h2>
+                    <p style="color: #666; margin: 0;">Zalogowano jako: <strong id="admin-user-display">Admin</strong></p>
+                </div>
+                <button class="back-btn" style="margin-top: 0;" onclick="pokazSklep()">← Wyjdź z panelu</button>
+            </div>
+
+            <hr style="margin: 20px 0; border: none; border-top: 1px solid #ccc;">
 
             <h3 style="margin-top: 25px;">Dodaj nowy produkt:</h3>
             <div class="form-group">
                 <label>Nazwa przedmiotu:</label>
-                <textarea id="admin-name" class="large-input" placeholder="Wpisz lub podyktuj nazwę przedmiotu (np. Booster Bundle 30th Anniversary)..."></textarea>
-                <button class="mic-btn" onclick="nasluchujNazwyIZdjecia()">🎤 Podyktuj i znajdź zdjęcie w sieci</button>
+                <textarea id="admin-name" class="large-input" placeholder="Wpisz lub podyktuj nazwę przedmiotu..."></textarea>
+                <div class="mic-btn-group">
+                    <button class="mic-btn" onclick="nasluchujNazwy()">🎤 Podyktuj nazwę</button>
+                    <button class="accept-btn" onclick="zaakceptujNazweIZdjecie()">✓ Zaakceptuj nazwę i znajdź zdjęcie</button>
+                </div>
             </div>
             <div class="form-group"><input type="number" id="admin-price" placeholder="Cena w zł (wpisz własną cenę)"></div>
             <div class="form-group"><input type="number" id="admin-stock" placeholder="Stan magazynowy (szt.)"></div>
             <div class="form-group"><input type="number" id="admin-discount" placeholder="Zniżka w % (opcjonalnie, np. 20)"></div>
-            <div class="form-group"><input type="text" id="admin-image" placeholder="Link do zdjęcia (wypełni się samo po podyktowaniu lub wklej własny URL)"></div>
+            <div class="form-group"><input type="text" id="admin-image" placeholder="Link do zdjęcia (URL lub wypełni się po zaakceptowaniu nazwy)"></div>
             <div class="form-group"><textarea id="admin-desc" placeholder="Opis produktu..."></textarea></div>
             <button class="btn-primary" style="width: 100%; border-radius: 8px; background-color: #2e7d32; color: #fff;" onclick="dodajNowyProduktAdmin()">+ Dodaj produkt do sklepu</button>
 
@@ -477,8 +508,11 @@
             <h3>Zarządzaj i edytuj produkty w sklepie:</h3>
             <p style="color: #666; font-size: 0.95em; margin-bottom: 15px;">Możesz tu bezpośrednio zmieniać nazwy, ceny, zniżki, stan magazynowy oraz linki do zdjęć.</p>
             <div id="admin-products-list"></div>
+
+            <div style="margin-top: 40px; text-align: right;">
+                <button class="back-btn" style="margin-top: 0;" onclick="pokazSklep()">← Wyjdź z panelu</button>
+            </div>
         </div>
-        <button class="back-btn" onclick="pokazSklep()">← Wyjdź z panelu</button>
     </div>
 
     <footer>
@@ -549,7 +583,7 @@
             }
         }
 
-        // Baza grafik w zależności od wypowiedzianej słowa kluczowego
+        // Baza grafik w zależności od słów kluczowych w nazwie
         function pobierzZdjecieDlaNazwy(text) {
             const low = text.toLowerCase();
             if (low.includes('bundle') || low.includes('booster bundle')) {
@@ -562,8 +596,8 @@
             return 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80';
         }
 
-        // Funkcja rozpoznawania mowy (dyktowanie nazwy + dopasowanie zdjęcia)
-        function nasluchujNazwyIZdjecia() {
+        // Krok 1: Podyktuj samą nazwę (możesz edytować)
+        function nasluchujNazwy() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
                 alert("Twoja przeglądarka nie obsługuje funkcji rozpoznawania mowy.");
@@ -573,22 +607,29 @@
             recognition.lang = 'pl-PL';
             recognition.start();
 
-            alert("Nasłuchiwanie... Powiedz nazwę przedmiotu (np. Booster Bundle 30th Anniversary).");
+            alert("Nasłuchiwanie... Powiedz nazwę przedmiotu.");
 
             recognition.onresult = function(event) {
                 const speechResult = event.results[0][0].transcript;
                 document.getElementById('admin-name').value = speechResult;
-
-                // Automatyczne przypisanie dopasowanej grafiki z sieci
-                const zdjecieUrl = pobierzZdjecieDlaNazwy(speechResult);
-                document.getElementById('admin-image').value = zdjecieUrl;
-                
-                alert(`Rozpoznano: "${speechResult}". Automatycznie dopasowano zdjęcie z sieci!`);
+                alert(`Rozpoznano nazwę: "${speechResult}". Możesz ją teraz poprawić, a następnie kliknąć „Zaakceptuj nazwę i znajdź zdjęcie”.`);
             };
 
             recognition.onerror = function(event) {
                 alert("Wystąpił błąd podczas rozpoznawania mowy.");
             };
+        }
+
+        // Krok 2: Zatwierdź nazwę i dopasuj zdjęcie
+        function zaakceptujNazweIZdjecie() {
+            const nazwaWpisana = document.getElementById('admin-name').value.trim();
+            if (!nazwaWpisana) {
+                alert("Najpierw wpisz lub podyktuj nazwę przedmiotu!");
+                return;
+            }
+            const zdjecieUrl = pobierzZdjecieDlaNazwy(nazwaWpisana);
+            document.getElementById('admin-image').value = zdjecieUrl;
+            alert("Nazwa zaakceptowana! Dopasowano odpowiednie zdjęcie z sieci.");
         }
 
         // Logowanie i Rejestracja
