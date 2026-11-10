@@ -7,77 +7,85 @@
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); 
+            /* Bardzo kolorowe, energetyczne tło nawiązujące do Pokémonów */
+            background: linear-gradient(135deg, #ff0055, #ffcc00, #00d2ff, #7928ca);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             color: #ffffff; 
             margin: 0;
             padding: 0;
             text-align: center;
         }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         
         /* Ekran główny (Startowy) */
         #home-screen {
             display: block;
-        }
-        .hero {
-            padding: 100px 20px;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=1200&q=80');
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            /* Klimatyczne tło z Pikachu/Pokémonami */
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=1200&q=80');
             background-size: cover;
             background-position: center;
-            border-bottom: 5px solid #ffcb05;
         }
-        h1 { color: #ffcb05; font-size: 3.2em; text-shadow: 2px 2px 6px rgba(0,0,0,0.9); margin-bottom: 10px; }
-        .subtitle { color: #00ffcc; font-size: 1.4em; font-weight: bold; margin-bottom: 35px; text-shadow: 1px 1px 4px rgba(0,0,0,0.9); }
+        h1 { color: #ffcb05; font-size: 3.5em; text-shadow: 3px 3px 8px rgba(0,0,0,0.9); margin-bottom: 10px; }
+        .subtitle { color: #ffffff; font-size: 1.4em; font-weight: bold; margin-bottom: 35px; text-shadow: 2px 2px 6px rgba(0,0,0,0.9); }
         
         .btn-primary {
             background-color: #ffcb05;
             color: #000;
             border: none;
-            padding: 16px 36px;
-            font-size: 1.2em;
+            padding: 18px 40px;
+            font-size: 1.3em;
             font-weight: bold;
-            border-radius: 30px;
+            border-radius: 35px;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(255, 203, 5, 0.5);
+            box-shadow: 0 6px 25px rgba(255, 203, 5, 0.6);
             transition: transform 0.2s, background-color 0.2s;
         }
-        .btn-primary:hover { background-color: #e6b800; transform: scale(1.05); }
+        .btn-primary:hover { background-color: #e6b800; transform: scale(1.08); }
 
-        /* Sekcja O firmie */
-        .section {
-            padding: 60px 20px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .about-box {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid #00ffcc;
-            border-radius: 15px;
-            padding: 30px;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        }
-        .about-box h2 { color: #00ffcc; margin-top: 0; font-size: 1.8em; }
-        .about-box p { color: #e0e0e0; line-height: 1.7; font-size: 1.1em; }
-
-        /* Ekran Sklepu (Katalog z suwakiem/siatką) */
+        /* Ekran Sklepu (Katalog z suwakiem i kolorowym tłem) */
         #shop-screen {
             display: none;
             padding: 40px 20px;
+            min-height: 100vh;
         }
+        
+        .shop-header {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            border: 2px solid #ffcb05;
+            backdrop-filter: blur(5px);
+        }
+        
         .shop-grid { 
             display: flex; 
             flex-wrap: wrap; 
             justify-content: center; 
             gap: 25px; 
-            max-width: 1100px; 
-            margin: 30px auto; 
+            max-width: 1200px; 
+            margin: 0 auto; 
         }
+        
         .product-card { 
             border: 2px solid #ffcb05; 
             border-radius: 15px; 
-            width: 270px; 
-            background: #22223b; 
-            box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+            width: 280px; 
+            background: rgba(26, 26, 46, 0.95); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -86,18 +94,18 @@
             transition: transform 0.3s, box-shadow 0.3s;
         }
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(255, 203, 5, 0.4);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(255, 203, 5, 0.5);
         }
         .product-img {
             width: 100%;
-            height: 180px;
+            height: 190px;
             object-fit: cover;
             border-bottom: 2px solid #ffcb05;
         }
         .product-info { padding: 15px; text-align: left; }
-        .product-card h3 { color: #ffcb05; margin: 0 0 10px 0; font-size: 1.2em; }
-        .product-card .price { font-size: 1.3em; font-weight: bold; color: #4caf50; margin-top: 10px; }
+        .product-card h3 { color: #ffcb05; margin: 0 0 8px 0; font-size: 1.25em; }
+        .product-card .price { font-size: 1.4em; font-weight: bold; color: #00ffcc; margin-top: 10px; }
         
         .details-btn {
             background-color: #ffcb05;
@@ -107,7 +115,7 @@
             padding: 12px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 1.05em;
             transition: background 0.2s;
         }
         .details-btn:hover { background-color: #e6b800; }
@@ -118,86 +126,82 @@
             padding: 50px 20px;
             max-width: 700px;
             margin: 0 auto;
+            min-height: 100vh;
         }
         .detail-card {
-            background: #22223b;
+            background: rgba(26, 26, 46, 0.95);
             border: 2px solid #ffcb05;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             text-align: center;
+            backdrop-filter: blur(5px);
         }
         .detail-img {
             max-width: 100%;
-            height: 280px;
+            height: 300px;
             object-fit: cover;
             border-radius: 10px;
             border: 2px solid #00ffcc;
             margin-bottom: 20px;
         }
-        .detail-card h2 { color: #ffcb05; font-size: 2em; margin-top: 0; }
-        .detail-price { font-size: 1.8em; color: #4caf50; font-weight: bold; margin: 15px 0; }
-        .detail-desc { color: #ccc; font-size: 1.1em; line-height: 1.6; margin-bottom: 25px; }
+        .detail-card h2 { color: #ffcb05; font-size: 2.2em; margin-top: 0; }
+        .detail-price { font-size: 1.8em; color: #00ffcc; font-weight: bold; margin: 15px 0; }
+        .detail-desc { color: #ddd; font-size: 1.15em; line-height: 1.6; margin-bottom: 25px; text-align: left; }
 
         .back-btn {
-            background-color: #444;
+            background-color: #333;
             color: #fff;
-            border: none;
+            border: 2px solid #ffcb05;
             padding: 12px 25px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             font-size: 1em;
-            margin-top: 15px;
+            margin-top: 20px;
+            transition: background 0.2s;
         }
-        .back-btn:hover { background-color: #555; }
+        .back-btn:hover { background-color: #444; }
         
         footer {
-            background: #111;
-            color: #888;
+            background: rgba(0,0,0,0.8);
+            color: #aaa;
             padding: 20px;
-            font-size: 0.9em;
-            border-top: 1px solid #333;
+            font-size: 0.95em;
+            border-top: 1px solid #444;
             margin-top: 50px;
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. EKRAN GŁÓWNY (STARTOWY) -->
+    <!-- 1. EKRAN GŁÓWNY -->
     <div id="home-screen">
-        <div class="hero">
-            <h1>TCG Zone</h1>
-            <p class="subtitle">Oficjalny sklep z zestawami i kartami Pokémon TCG</p>
-            <button class="btn-primary" onclick="pokazSklep()">Przejdź do świata Pokémon</button>
-        </div>
-
-        <div class="section">
-            <div class="about-box">
-                <h2>O naszej firmie</h2>
-                <p><strong>TCG Zone</strong> powstało z pasji do kolekcjonowania kart Pokémon. Oferujemy wyłącznie oryginalne, fabrycznie zafoliowane produkty – od pojedynczych boosterów, przez Elite Trainer Boxy, aż po rzadkie kolekcjonerskie edycje jubileuszowe. Gwarantujemy pewne zakupy, szybką wysyłkę i niezapomniane emocje przy otwieraniu paczek!</p>
-            </div>
-        </div>
+        <h1>TCG Zone</h1>
+        <p class="subtitle">Oficjalny sklep z zestawami i kartami Pokémon TCG</p>
+        <button class="btn-primary" onclick="otworzSklep()">Przejdź do świata Pokémon</button>
     </div>
 
-    <!-- 2. EKRAN SKLEPU (KATALOG PRODUKTÓW) -->
+    <!-- 2. EKRAN SKLEPU (KATALOG Z ASORTYMENTEM) -->
     <div id="shop-screen">
-        <h1 style="color: #ffcb05;">Katalog Produktów TCGzone</h1>
-        <p style="color: #bbb;">Wybierz produkt, aby zobaczyć jego pełny opis i szczegóły:</p>
+        <div class="shop-header">
+            <h1 style="color: #ffcb05; margin: 0 0 10px 0; font-size: 2.5em;">Katalog Sklepu TCGzone</h1>
+            <p style="color: #ddd; margin: 0; font-size: 1.1em;">Przewiń w dół, wybierz interesujący Cię zestaw i kliknij, aby poznać szczegóły!</p>
+        </div>
         
         <div class="shop-grid" id="product-list">
-            <!-- Produkty generowane automatycznie -->
+            <!-- Produkty wczytują się automatycznie z poniższej bazy danych JavaScript -->
         </div>
 
-        <button class="back-btn" onclick="pokazDom()">Wróć do strony głównej</button>
+        <button class="back-btn" onclick="pokazStart()" style="margin-top: 40px;">← Wróć do strony powitalnej</button>
     </div>
 
     <!-- 3. EKRAN SZCZEGÓŁÓW PRODUKTU -->
     <div id="detail-screen">
         <div class="detail-card" id="detail-content">
-            <!-- Szczegóły produktu wstrzykiwane przez JS -->
+            <!-- Dynamiczne szczegóły -->
         </div>
-        <button class="back-btn" onclick="pokazSklep()">← Wróć do listy produktów</button>
+        <button class="back-btn" onclick="otworzSklep()">← Wróć do katalogu</button>
     </div>
 
     <footer>
@@ -205,14 +209,17 @@
     </footer>
 
     <script>
-        // Baza produktów w sklepie
+        // =========================================================================
+        // BAZA PRODUKTÓW - TUTAJ W PROSTY SPOSÓB DODAJESZ NOWE ASORTYMENTY!
+        // Wystarczy skopiować klamry {} i zmienić nazwę, cenę, zdjęcie oraz opis.
+        // =========================================================================
         const produkty = [
             {
                 id: 1,
                 nazwa: "Elite Trainer Box 30th Anniversary",
                 cena: "299.00 zł",
                 zdjęcie: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80",
-                opis: "Wyjątkowa, rocznicowa edycja Elite Trainer Box! W środku znajdziesz kolekcjonerskie boostery z unikalnymi kartami, specjalne koszulki na karty z jubileuszowym nadrukiem, kości, znaczniki oraz ekskluzywną kartę promo."
+                opis: "Wyjątkowa, jubileuszowa edycja Elite Trainer Box! W środku znajdziesz kolekcjonerskie boostery z unikalnymi kartami, specjalne koszulki na karty z jubileuszowym nadrukiem, kości, znaczniki oraz ekskluzywną kartę promo."
             },
             {
                 id: 2,
@@ -237,8 +244,8 @@
             }
         ];
 
-        // Funkcje przełączania ekranów
-        function pokazSklep() {
+        // Logika przełączania widoków
+        function otworzSklep() {
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('detail-screen').style.display = 'none';
             document.getElementById('shop-screen').style.display = 'block';
@@ -246,10 +253,10 @@
             renderujProdukty();
         }
 
-        function pokazDom() {
+        function pokazStart() {
             document.getElementById('shop-screen').style.display = 'none';
             document.getElementById('detail-screen').style.display = 'none';
-            document.getElementById('home-screen').style.display = 'block';
+            document.getElementById('home-screen').style.display = 'flex';
             window.scrollTo(0, 0);
         }
 
@@ -286,8 +293,8 @@
                 <img src="${produkt.zdjęcie}" alt="${produkt.nazwa}" class="detail-img">
                 <h2>${produkt.nazwa}</h2>
                 <div class="detail-price">${produkt.cena}</div>
-                <p class="detail-desc">${produkt.opis}</p>
-                <button class="btn-primary" onclick="alert('Produkt dodany do koszyka!')">Kup teraz</button>
+                <p class="detail-desc"><strong>Opis produktu:</strong><br>${produkt.opis}</p>
+                <button class="btn-primary" onclick="alert('Produkt został dodany do koszyka!')">Kup teraz</button>
             `;
         }
     </script>
