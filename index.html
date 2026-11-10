@@ -117,9 +117,56 @@
         }
         .btn-primary:hover { background-color: #e6b800; transform: scale(1.05); }
 
+        /* Suwak / Pasek Kontaktowy */
+        .contact-slider-wrapper {
+            max-width: 900px;
+            margin: -30px auto 40px auto;
+            position: relative;
+            z-index: 10;
+            padding: 0 20px;
+        }
+        .contact-slider-card {
+            background: #ffffff;
+            border: 2px solid #ffcb05;
+            border-radius: 15px;
+            padding: 25px 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .contact-item-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .contact-item-group .icon {
+            font-size: 1.8em;
+        }
+        .contact-item-group div {
+            text-align: left;
+        }
+        .contact-item-group strong {
+            display: block;
+            color: #1a1a2e;
+            font-size: 1.05em;
+        }
+        .contact-item-group a {
+            color: #0288d1;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            font-size: 0.95em;
+        }
+        .contact-item-group a:hover {
+            text-decoration: underline;
+        }
+
         .about-section {
             max-width: 900px;
-            margin: 80px auto;
+            margin: 40px auto 80px auto;
             padding: 0 20px;
             text-align: center;
         }
@@ -298,6 +345,15 @@
         .btn-paypal { background-color: #003087; }
         .btn-card { background-color: #2e7d32; }
 
+        /* Panel admina - sekcje ustawień */
+        .admin-section-box {
+            background: #fff;
+            border: 2px dashed #0288d1;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
         /* Karty edycji produktów w panelu admina */
         .admin-product-edit-card {
             background: #ffffff;
@@ -409,6 +465,26 @@
             <button class="btn-primary" onclick="pokazSklep()">Przejdź do świata Pokémon</button>
         </div>
 
+        <!-- PASEK KONTAKTOWY POD BANEREM -->
+        <div class="contact-slider-wrapper">
+            <div class="contact-slider-card">
+                <div class="contact-item-group">
+                    <span class="icon">📞</span>
+                    <div>
+                        <strong>Kontakt telefoniczny:</strong>
+                        <div id="home-phone-list"></div>
+                    </div>
+                </div>
+                <div class="contact-item-group">
+                    <span class="icon">✉️</span>
+                    <div>
+                        <strong>Adres e-mail:</strong>
+                        <div id="home-email-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="about-section">
             <div class="about-box">
                 <h2>O naszej firmie i pasji</h2>
@@ -492,6 +568,34 @@
             </div>
 
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #ccc;">
+
+            <!-- NOWOŚĆ: Zarządzanie Kontaktem -->
+            <div class="admin-section-box" style="border-color: #2e7d32;">
+                <h3 style="color: #2e7d32; margin-top: 0;">📞 Zarządzanie danymi kontaktowymi (Strona Główna)</h3>
+                <div class="form-group">
+                    <label>Numery telefonów (rozdziel po przecinku, np. +48 123 456 789, +48 987 654 321):</label>
+                    <input type="text" id="admin-phones-input" placeholder="+48 123 456 789">
+                </div>
+                <div class="form-group">
+                    <label>Adresy e-mail (rozdziel po przecinku, np. kontakt@tcgzone.pl, pomoc@tcgzone.pl):</label>
+                    <input type="text" id="admin-emails-input" placeholder="kontakt@tcgzone.pl">
+                </div>
+                <button class="btn-primary" style="width: 100%; border-radius: 8px; font-size: 1.05em; background-color: #2e7d32; color: #fff;" onclick="zapiszDaneKontaktowe()">💾 Zapisz dane kontaktowe</button>
+            </div>
+
+            <!-- Panel ustawień wysyłki -->
+            <div class="admin-section-box">
+                <h3 style="color: #0288d1; margin-top: 0;">🚚 Ustawienia Dostawy i Darmowej Wysyłki</h3>
+                <div class="form-group">
+                    <label>Standardowy koszt wysyłki (zł):</label>
+                    <input type="number" step="0.01" id="admin-shipping-fee" placeholder="np. 15.00">
+                </div>
+                <div class="form-group">
+                    <label>Minimalna kwota zamówienia dla darmowej dostawy (zł):</label>
+                    <input type="number" step="0.01" id="admin-free-shipping-threshold" placeholder="np. 200.00 (wpisz 0 jeśli zawsze płatna)">
+                </div>
+                <button class="btn-primary" style="width: 100%; border-radius: 8px; font-size: 1.05em; background-color: #0288d1; color: #fff;" onclick="zapiszUstawieniaWysylki()">💾 Zapisz ustawienia wysyłki</button>
+            </div>
 
             <h3 style="margin-top: 25px;">Dodaj nowy produkt:</h3>
             <div class="form-group">
@@ -577,25 +681,80 @@
             }
         ];
 
+        let ustawieniaWysylki = JSON.parse(localStorage.getItem('tcg_wysylka')) || {
+            koszt: 15.00,
+            progDarmowej: 200.00
+        };
+
+        // Dane kontaktowe (domyślne)
+        let daneKontaktowe = JSON.parse(localStorage.getItem('tcg_kontakt')) || {
+            telefony: ["+48 123 456 789"],
+            emaily: ["kontakt@tcgzone.pl"]
+        };
+
         let zalogowanyUzytkownik = JSON.parse(localStorage.getItem('tcg_zalogowany')) || null;
         let trybRejestracji = false;
         let koszyk = [];
         let wyblanyProdukt = null;
 
-        // Stały koszt wysyłki (możesz zmienić np. na 15.00, jeśli chcesz płatną wysyłkę)
-        let kosztWysylki = 0.00;
-
+        renderujDaneKontaktoweStart();
         aktualizujWidokKonta();
         aktualizujLicznik();
 
         function zapiszStan() {
             localStorage.setItem('tcg_produkty', JSON.stringify(produkty));
             localStorage.setItem('tcg_uzytkownicy', JSON.stringify(uzytkownicy));
+            localStorage.setItem('tcg_wysylka', JSON.stringify(ustawieniaWysylki));
+            localStorage.setItem('tcg_kontakt', JSON.stringify(daneKontaktowe));
             if (zalogowanyUzytkownik) {
                 localStorage.setItem('tcg_zalogowany', JSON.stringify(zalogowanyUzytkownik));
             } else {
                 localStorage.removeItem('tcg_zalogowany');
             }
+        }
+
+        function renderujDaneKontaktoweStart() {
+            const phoneDiv = document.getElementById('home-phone-list');
+            const emailDiv = document.getElementById('home-email-list');
+            
+            phoneDiv.innerHTML = daneKontaktowe.telefony.map(p => `<a href="tel:${p.replace(/\s+/g, '')}">${p}</a>`).join('');
+            emailDiv.innerHTML = daneKontaktowe.emaily.map(e => `<a href="mailto:${e}">${e}</a>`).join('');
+        }
+
+        function zapiszDaneKontaktowe() {
+            const rawPhones = document.getElementById('admin-phones-input').value;
+            const rawEmails = document.getElementById('admin-emails-input').value;
+
+            const arrPhones = rawPhones.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            const arrEmails = rawEmails.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+            if (arrPhones.length === 0 || arrEmails.length === 0) {
+                alert("Wpisz przynajmniej jeden numer telefonu i jeden adres e-mail!");
+                return;
+            }
+
+            daneKontaktowe.telefony = arrPhones;
+            daneKontaktowe.emaily = arrEmails;
+            zapiszStan();
+            renderujDaneKontaktoweStart();
+
+            alert("Dane kontaktowe na stronie głównej zostały pomyślnie zaktualizowane!");
+        }
+
+        function zapiszUstawieniaWysylki() {
+            const kosztIn = parseFloat(document.getElementById('admin-shipping-fee').value);
+            const progIn = parseFloat(document.getElementById('admin-free-shipping-threshold').value);
+
+            if (isNaN(kosztIn) || isNaN(progIn)) {
+                alert("Wprowadź poprawne kwoty liczbowe dla ustawień wysyłki!");
+                return;
+            }
+
+            ustawieniaWysylki.koszt = kosztIn;
+            ustawieniaWysylki.progDarmowej = progIn;
+            zapiszStan();
+
+            alert("Ustawienia wysyłki zostały pomyślnie zaktualizowane!");
         }
 
         function pobierzZdjecieDlaNazwy(text) {
@@ -741,6 +900,12 @@
             document.getElementById('admin-screen').style.display = 'block';
             document.getElementById('admin-user-display').innerText = `${zalogowanyUzytkownik.username} (${zalogowanyUzytkownik.role})`;
             
+            // Podstawianie danych w panelu admina
+            document.getElementById('admin-shipping-fee').value = ustawieniaWysylki.koszt;
+            document.getElementById('admin-free-shipping-threshold').value = ustawieniaWysylki.progDarmowej;
+            document.getElementById('admin-phones-input').value = daneKontaktowe.telefony.join(', ');
+            document.getElementById('admin-emails-input').value = daneKontaktowe.emaily.join(', ');
+
             const usersSection = document.getElementById('admin-users-management-section');
             if (zalogowanyUzytkownik.role === "admin") {
                 usersSection.style.display = "block";
@@ -1096,10 +1261,20 @@
                 container.appendChild(row);
             });
 
-            const lacznaKwotaZCenaDostawy = sumaProdukty + kosztWysylki;
+            let aktualnyKosztWysylki = ustawieniaWysylki.koszt;
+            if (ustawieniaWysylki.progDarmowej > 0 && sumaProdukty >= ustawieniaWysylki.progDarmowej) {
+                aktualnyKosztWysylki = 0.00;
+            }
+
+            const lacznaKwotaZCenaDostawy = sumaProdukty + aktualnyKosztWysylki;
 
             totalSpan.innerText = lacznaKwotaZCenaDostawy.toFixed(2) + ' zł';
-            shippingSpan.innerText = kosztWysylki.toFixed(2) + ' zł';
+            
+            if (aktualnyKosztWysylki === 0.00) {
+                shippingSpan.innerHTML = `<span style="color: #2e7d32;">0.00 zł (Darmowa dostawa!)</span>`;
+            } else {
+                shippingSpan.innerText = aktualnyKosztWysylki.toFixed(2) + ' zł';
+            }
 
             document.getElementById('paypal-link-btn').href = `https://paypal.me/TwojLoginPayPal/${lacznaKwotaZCenaDostawy.toFixed(2)}PLN`;
 
@@ -1108,7 +1283,7 @@
 
         function przekierujBlik() {
             alert("Zostaniesz przekierowany do instrukcji płatności BLIK / przelewu.");
-            window.location.href = "tel:+48123456789"; 
+            window.location.href = "tel:" + (daneKontaktowe.telefony[0] || "+48123456789").replace(/\s+/g, ''); 
         }
 
         function przekierujKarta() {
