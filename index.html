@@ -117,7 +117,7 @@
         }
         .btn-primary:hover { background-color: #e6b800; transform: scale(1.05); }
 
-        /* Suwak / Pasek Kontaktowy */
+        /* Pasek Kontaktowy na stronie głównej */
         .contact-slider-wrapper {
             max-width: 900px;
             margin: -30px auto 40px auto;
@@ -142,27 +142,11 @@
             align-items: center;
             gap: 12px;
         }
-        .contact-item-group .icon {
-            font-size: 1.8em;
-        }
-        .contact-item-group div {
-            text-align: left;
-        }
-        .contact-item-group strong {
-            display: block;
-            color: #1a1a2e;
-            font-size: 1.05em;
-        }
-        .contact-item-group a {
-            color: #0288d1;
-            text-decoration: none;
-            font-weight: bold;
-            display: block;
-            font-size: 0.95em;
-        }
-        .contact-item-group a:hover {
-            text-decoration: underline;
-        }
+        .contact-item-group .icon { font-size: 1.8em; }
+        .contact-item-group div { text-align: left; }
+        .contact-item-group strong { display: block; color: #1a1a2e; font-size: 1.05em; }
+        .contact-item-group a { color: #0288d1; text-decoration: none; font-weight: bold; display: block; font-size: 0.95em; }
+        .contact-item-group a:hover { text-decoration: underline; }
 
         .about-section {
             max-width: 900px;
@@ -465,7 +449,7 @@
             <button class="btn-primary" onclick="pokazSklep()">Przejdź do świata Pokémon</button>
         </div>
 
-        <!-- PASEK KONTAKTOWY POD BANEREM -->
+        <!-- Pasek Kontaktowy (telefony i e-maile na stronie głównej) -->
         <div class="contact-slider-wrapper">
             <div class="contact-slider-card">
                 <div class="contact-item-group">
@@ -569,30 +553,30 @@
 
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #ccc;">
 
-            <!-- NOWOŚĆ: Zarządzanie Kontaktem -->
+            <!-- ZAKŁADKA 1: Zarządzanie Kontaktem -->
             <div class="admin-section-box" style="border-color: #2e7d32;">
-                <h3 style="color: #2e7d32; margin-top: 0;">📞 Zarządzanie danymi kontaktowymi (Strona Główna)</h3>
+                <h3 style="color: #2e7d32; margin-top: 0;">📞 Zakładka Kontakt (Telefony i E-maile na stronie)</h3>
                 <div class="form-group">
-                    <label>Numery telefonów (rozdziel po przecinku, np. +48 123 456 789, +48 987 654 321):</label>
-                    <input type="text" id="admin-phones-input" placeholder="+48 123 456 789">
+                    <label>Numery telefonów (rozdziel przecinkami):</label>
+                    <input type="text" id="admin-phones-input" placeholder="+48 123 456 789, +48 987 654 321">
                 </div>
                 <div class="form-group">
-                    <label>Adresy e-mail (rozdziel po przecinku, np. kontakt@tcgzone.pl, pomoc@tcgzone.pl):</label>
-                    <input type="text" id="admin-emails-input" placeholder="kontakt@tcgzone.pl">
+                    <label>Adresy e-mail (rozdziel przecinkami):</label>
+                    <input type="text" id="admin-emails-input" placeholder="kontakt@tcgzone.pl, sklep@tcgzone.pl">
                 </div>
                 <button class="btn-primary" style="width: 100%; border-radius: 8px; font-size: 1.05em; background-color: #2e7d32; color: #fff;" onclick="zapiszDaneKontaktowe()">💾 Zapisz dane kontaktowe</button>
             </div>
 
-            <!-- Panel ustawień wysyłki -->
-            <div class="admin-section-box">
-                <h3 style="color: #0288d1; margin-top: 0;">🚚 Ustawienia Dostawy i Darmowej Wysyłki</h3>
+            <!-- ZAKŁADKA 2: Zarządzanie Wysyłką -->
+            <div class="admin-section-box" style="border-color: #0288d1;">
+                <h3 style="color: #0288d1; margin-top: 0;">🚚 Zakładka Dostawa (Koszt i próg darmowej wysyłki)</h3>
                 <div class="form-group">
                     <label>Standardowy koszt wysyłki (zł):</label>
                     <input type="number" step="0.01" id="admin-shipping-fee" placeholder="np. 15.00">
                 </div>
                 <div class="form-group">
                     <label>Minimalna kwota zamówienia dla darmowej dostawy (zł):</label>
-                    <input type="number" step="0.01" id="admin-free-shipping-threshold" placeholder="np. 200.00 (wpisz 0 jeśli zawsze płatna)">
+                    <input type="number" step="0.01" id="admin-free-shipping-threshold" placeholder="np. 200.00 (wpisz 0, jeśli zawsze płatna)">
                 </div>
                 <button class="btn-primary" style="width: 100%; border-radius: 8px; font-size: 1.05em; background-color: #0288d1; color: #fff;" onclick="zapiszUstawieniaWysylki()">💾 Zapisz ustawienia wysyłki</button>
             </div>
@@ -686,7 +670,6 @@
             progDarmowej: 200.00
         };
 
-        // Dane kontaktowe (domyślne)
         let daneKontaktowe = JSON.parse(localStorage.getItem('tcg_kontakt')) || {
             telefony: ["+48 123 456 789"],
             emaily: ["kontakt@tcgzone.pl"]
@@ -717,8 +700,10 @@
             const phoneDiv = document.getElementById('home-phone-list');
             const emailDiv = document.getElementById('home-email-list');
             
-            phoneDiv.innerHTML = daneKontaktowe.telefony.map(p => `<a href="tel:${p.replace(/\s+/g, '')}">${p}</a>`).join('');
-            emailDiv.innerHTML = daneKontaktowe.emaily.map(e => `<a href="mailto:${e}">${e}</a>`).join('');
+            if (phoneDiv && emailDiv) {
+                phoneDiv.innerHTML = daneKontaktowe.telefony.map(p => `<a href="tel:${p.replace(/\s+/g, '')}">${p}</a>`).join('');
+                emailDiv.innerHTML = daneKontaktowe.emaily.map(e => `<a href="mailto:${e}">${e}</a>`).join('');
+            }
         }
 
         function zapiszDaneKontaktowe() {
@@ -738,7 +723,7 @@
             zapiszStan();
             renderujDaneKontaktoweStart();
 
-            alert("Dane kontaktowe na stronie głównej zostały pomyślnie zaktualizowane!");
+            alert("Dane kontaktowe zostały pomyślnie zaktualizowane!");
         }
 
         function zapiszUstawieniaWysylki() {
@@ -900,7 +885,6 @@
             document.getElementById('admin-screen').style.display = 'block';
             document.getElementById('admin-user-display').innerText = `${zalogowanyUzytkownik.username} (${zalogowanyUzytkownik.role})`;
             
-            // Podstawianie danych w panelu admina
             document.getElementById('admin-shipping-fee').value = ustawieniaWysylki.koszt;
             document.getElementById('admin-free-shipping-threshold').value = ustawieniaWysylki.progDarmowej;
             document.getElementById('admin-phones-input').value = daneKontaktowe.telefony.join(', ');
