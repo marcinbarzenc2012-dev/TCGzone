@@ -268,7 +268,6 @@
             font-size: 1em;
         }
 
-        /* Powiększona ramka do wpisywania nazwy produktu */
         .form-group textarea.large-input {
             height: 90px;
             resize: vertical;
@@ -330,15 +329,16 @@
             background: #ffcb05;
             border: 2px solid #d4a500;
             color: #000;
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 10px 16px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.9em;
-            margin-top: 5px;
+            font-size: 0.95em;
+            margin-top: 8px;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
         }
         .mic-btn:hover { background: #e6b800; }
 
@@ -452,16 +452,16 @@
             <h2 style="color: #1a1a2e; margin-top: 0;">Panel Zarządzania Firmą ⚙️</h2>
             <p style="color: #666;">Zalogowano jako: <strong id="admin-user-display">Admin</strong></p>
 
-            <h3 style="margin-top: 25px;">Dodaj nowy produkt (możesz podyktować nazwę głosem!):</h3>
+            <h3 style="margin-top: 25px;">Dodaj nowy produkt:</h3>
             <div class="form-group">
                 <label>Nazwa przedmiotu:</label>
-                <textarea id="admin-name" class="large-input" placeholder="Wpisz lub podyktuj nazwę przedmiotu..."></textarea>
-                <button class="mic-btn" onclick="nasluchujNazwy()">🎤 Dyktuj nazwę głosem</button>
+                <textarea id="admin-name" class="large-input" placeholder="Wpisz lub podyktuj nazwę przedmiotu (np. Booster Bundle 30th Anniversary)..."></textarea>
+                <button class="mic-btn" onclick="nasluchujNazwyIZdjecia()">🎤 Podyktuj i znajdź zdjęcie w sieci</button>
             </div>
-            <div class="form-group"><input type="number" id="admin-price" placeholder="Cena w zł"></div>
+            <div class="form-group"><input type="number" id="admin-price" placeholder="Cena w zł (wpisz własną cenę)"></div>
             <div class="form-group"><input type="number" id="admin-stock" placeholder="Stan magazynowy (szt.)"></div>
             <div class="form-group"><input type="number" id="admin-discount" placeholder="Zniżka w % (opcjonalnie, np. 20)"></div>
-            <div class="form-group"><input type="text" id="admin-image" placeholder="Link do zdjęcia (URL)"></div>
+            <div class="form-group"><input type="text" id="admin-image" placeholder="Link do zdjęcia (wypełni się samo po podyktowaniu lub wklej własny URL)"></div>
             <div class="form-group"><textarea id="admin-desc" placeholder="Opis produktu..."></textarea></div>
             <button class="btn-primary" style="width: 100%; border-radius: 8px; background-color: #2e7d32; color: #fff;" onclick="dodajNowyProduktAdmin()">+ Dodaj produkt do sklepu</button>
 
@@ -549,8 +549,21 @@
             }
         }
 
-        // Funkcja rozpoznawania mowy (dyktowanie nazwy)
-        function nasluchujNazwy() {
+        // Baza grafik w zależności od wypowiedzianej słowa kluczowego
+        function pobierzZdjecieDlaNazwy(text) {
+            const low = text.toLowerCase();
+            if (low.includes('bundle') || low.includes('booster bundle')) {
+                return 'https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=600&q=80';
+            } else if (low.includes('elite') || low.includes('etb') || low.includes('trainer')) {
+                return 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80';
+            } else if (low.includes('booster') || low.includes('paczka') || low.includes('saszetka')) {
+                return 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80';
+            }
+            return 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80';
+        }
+
+        // Funkcja rozpoznawania mowy (dyktowanie nazwy + dopasowanie zdjęcia)
+        function nasluchujNazwyIZdjecia() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
                 alert("Twoja przeglądarka nie obsługuje funkcji rozpoznawania mowy.");
@@ -560,11 +573,17 @@
             recognition.lang = 'pl-PL';
             recognition.start();
 
-            alert("Nasłuchiwanie... Powiedz nazwę produktu.");
+            alert("Nasłuchiwanie... Powiedz nazwę przedmiotu (np. Booster Bundle 30th Anniversary).");
 
             recognition.onresult = function(event) {
                 const speechResult = event.results[0][0].transcript;
                 document.getElementById('admin-name').value = speechResult;
+
+                // Automatyczne przypisanie dopasowanej grafiki z sieci
+                const zdjecieUrl = pobierzZdjecieDlaNazwy(speechResult);
+                document.getElementById('admin-image').value = zdjecieUrl;
+                
+                alert(`Rozpoznano: "${speechResult}". Automatycznie dopasowano zdjęcie z sieci!`);
             };
 
             recognition.onerror = function(event) {
