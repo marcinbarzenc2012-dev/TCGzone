@@ -185,17 +185,14 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* Szczegóły produktu */
+        /* Szczegóły produktu - układ pełnoekranowy (pełna szerokość) */
         #detail-screen {
             display: none;
-            max-width: 1100px;
+            max-width: 900px;
             margin: 40px auto;
             padding: 20px;
         }
         .detail-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
             background: #f8f9fa;
             border: 2px solid #ffcb05;
             border-radius: 20px;
@@ -203,36 +200,48 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.08);
             text-align: left;
         }
-        @media (max-width: 768px) {
-            .detail-layout { grid-template-columns: 1fr; }
+        .detail-img { 
+            width: 100%; 
+            max-height: 450px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            border: 1px solid #ddd; 
+            margin-bottom: 25px;
         }
-        .detail-img { width: 100%; max-height: 450px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd; }
-        .detail-info h2 { color: #1a1a2e; font-size: 2.2em; margin-top: 0; }
-        .detail-stock { color: #d97706; font-weight: bold; font-size: 1.1em; margin-bottom: 15px; }
-        .detail-desc { color: #555; font-size: 1.1em; line-height: 1.6; margin: 20px 0; }
+        .detail-info h2 { color: #1a1a2e; font-size: 2.5em; margin-top: 0; margin-bottom: 10px; }
+        .detail-stock { color: #d97706; font-weight: bold; font-size: 1.15em; margin-bottom: 20px; }
         
         .detail-price-box { display: flex; align-items: baseline; gap: 15px; margin: 20px 0; }
-        .detail-price { font-size: 2em; color: #2e7d32; font-weight: bold; }
-        .detail-old-price { font-size: 1.3em; color: #888; text-decoration: line-through; }
+        .detail-price { font-size: 2.2em; color: #2e7d32; font-weight: bold; }
+        .detail-old-price { font-size: 1.4em; color: #888; text-decoration: line-through; }
 
         .quantity-control { margin: 25px 0; display: flex; align-items: center; gap: 15px; }
-        .quantity-control label { font-size: 1.1em; font-weight: bold; color: #333; }
-        .quantity-control input { width: 80px; padding: 8px; font-size: 1.1em; border-radius: 8px; border: 2px solid #ccc; text-align: center; }
+        .quantity-control label { font-size: 1.15em; font-weight: bold; color: #333; }
+        .quantity-control input { width: 90px; padding: 10px; font-size: 1.2em; border-radius: 8px; border: 2px solid #ccc; text-align: center; }
 
         .btn-add-cart {
             background-color: #ffcb05;
             color: #000;
             border: none;
-            padding: 15px 30px;
-            font-size: 1.15em;
+            padding: 16px 30px;
+            font-size: 1.2em;
             font-weight: bold;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             width: 100%;
             transition: background 0.2s;
             box-shadow: 0 4px 12px rgba(255, 203, 5, 0.3);
+            margin-top: 10px;
         }
         .btn-add-cart:hover { background-color: #e6b800; }
+
+        .detail-desc-section {
+            margin-top: 40px;
+            border-top: 2px solid #e0e0e0;
+            padding-top: 25px;
+        }
+        .detail-desc-section h3 { color: #1a1a2e; font-size: 1.5em; margin-top: 0; margin-bottom: 12px; }
+        .detail-desc { color: #555; font-size: 1.15em; line-height: 1.7; }
 
         /* Okna systemowe */
         #auth-screen, #cart-screen, #payment-screen, #admin-screen { 
@@ -277,7 +286,7 @@
         }
         .admin-product-edit-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr;
             gap: 10px;
             margin-bottom: 10px;
         }
@@ -459,7 +468,7 @@
             </div>
 
             <h3>Zarządzaj i edytuj produkty w sklepie:</h3>
-            <p style="color: #666; font-size: 0.95em; margin-bottom: 15px;">Możesz tu bezpośrednio zmieniać nazwy, ceny, zniżki lub stany magazynowe.</p>
+            <p style="color: #666; font-size: 0.95em; margin-bottom: 15px;">Możesz tu bezpośrednio zmieniać nazwy, ceny, zniżki, stan magazynowy oraz linki do zdjęć.</p>
             <div id="admin-products-list"></div>
         </div>
         <button class="back-btn" onclick="pokazSklep()">← Wyjdź z panelu</button>
@@ -742,6 +751,7 @@
             const nowaCena = parseFloat(document.getElementById(`edit-price-${id}`).value);
             const nowyStan = parseInt(document.getElementById(`edit-stock-${id}`).value);
             const nowaZnizka = parseFloat(document.getElementById(`edit-discount-${id}`).value) || 0;
+            const noweZdjecie = document.getElementById(`edit-image-${id}`).value.trim();
 
             if (!nowaNazwa || isNaN(nowaCena) || isNaN(nowyStan)) {
                 alert("Uzupełnij poprawnie dane edytowanego produktu!");
@@ -752,6 +762,9 @@
             p.cena = nowaCena;
             p.magazyn = nowyStan;
             p.znizka = nowaZnizka;
+            if (noweZdjecie) {
+                p.zdjęcie = noweZdjecie;
+            }
 
             zapiszStan();
             alert(`Zapisano zmiany dla produktu: ${p.nazwa}`);
@@ -786,12 +799,18 @@
                             <label style="font-size: 0.85em; color: #666;">Stan (szt.):</label>
                             <input type="number" id="edit-stock-${p.id}" value="${p.magazyn}">
                         </div>
+                    </div>
+                    <div class="admin-product-edit-grid" style="margin-top: 10px;">
                         <div>
                             <label style="font-size: 0.85em; color: #666;">Zniżka (%):</label>
                             <input type="number" id="edit-discount-${p.id}" value="${p.znizka}">
                         </div>
+                        <div style="grid-column: span 2;">
+                            <label style="font-size: 0.85em; color: #666;">Link do zdjęcia (URL):</label>
+                            <input type="text" id="edit-image-${p.id}" value="${p.zdjęcie}">
+                        </div>
                     </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
                         <button class="btn-save-prod" onclick="zapiszZmianyProduktu(${p.id})">Zapisz zmiany</button>
                         <button class="btn-delete" onclick="usunProdukt(${p.id})">Usuń produkt</button>
                     </div>
@@ -868,6 +887,7 @@
             });
         }
 
+        // Układ szczegółów produktu na pełną szerokość z opisem na samym dole
         function otwórzProdukt(id) {
             wyblanyProdukt = produkty.find(p => p.id === id);
             if (!wyblanyProdukt) return;
@@ -884,25 +904,27 @@
 
             const container = document.getElementById('detail-content');
             container.innerHTML = `
-                <div>
+                <div class="detail-layout">
                     <img src="${wyblanyProdukt.zdjęcie}" class="detail-img">
-                </div>
-                <div class="detail-info">
                     <h2>${wyblanyProdukt.nazwa}</h2>
                     <div class="detail-stock">Dostęp w magazynie: ${wyblanyProdukt.magazyn} szt.</div>
-                    <div class="detail-desc">${wyblanyProdukt.opis}</div>
-                    
-                    <div class="quantity-control">
-                        <label for="quantity-input">Ilość sztuk:</label>
-                        <input type="number" id="quantity-input" value="1" min="1" max="${wyblanyProdukt.magazyn}" onchange="przeliczCene()">
-                    </div>
                     
                     <div class="detail-price-box">
                         <div class="detail-price">Łącznie: <span id="calculated-price">${finalnaCena.toFixed(2)}</span> zł</div>
                         ${maZnizke ? `<div class="detail-old-price" id="calculated-old-price">${(wyblanyProdukt.cena * parseInt(document.getElementById('quantity-input')?.value || 1)).toFixed(2)} zł</div>` : ''}
                     </div>
+
+                    <div class="quantity-control">
+                        <label for="quantity-input">Ilość sztuk:</label>
+                        <input type="number" id="quantity-input" value="1" min="1" max="${wyblanyProdukt.magazyn}" onchange="przeliczCene()">
+                    </div>
                     
                     <button class="btn-add-cart" onclick="dodajDoKoszyka()">Dodaj do koszyka 🛒</button>
+
+                    <div class="detail-desc-section">
+                        <h3>Opis:</h3>
+                        <div class="detail-desc">${wyblanyProdukt.opis}</div>
+                    </div>
                 </div>
             `;
         }
@@ -1079,7 +1101,6 @@
                 }
             }
 
-            // Aktualizacja stanu magazynowego dopiero po udanej płatności
             koszyk.forEach(itemKoszyka => {
                 const p = produkty.find(prod => prod.id === itemKoszyka.id);
                 if (p) {
