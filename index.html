@@ -185,7 +185,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* Szczegóły produktu - układ pełnoekranowy (pełna szerokość) */
+        /* Szczegóły produktu - pełna szerokość */
         #detail-screen {
             display: none;
             max-width: 900px;
@@ -266,6 +266,13 @@
             border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 1em;
+        }
+
+        /* Powiększona ramka do wpisywania nazwy produktu */
+        .form-group textarea.large-input {
+            height: 90px;
+            resize: vertical;
+            font-size: 1.1em;
         }
 
         .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; padding: 15px 0; }
@@ -448,7 +455,7 @@
             <h3 style="margin-top: 25px;">Dodaj nowy produkt (możesz podyktować nazwę głosem!):</h3>
             <div class="form-group">
                 <label>Nazwa przedmiotu:</label>
-                <input type="text" id="admin-name" placeholder="Nazwa przedmiotu">
+                <textarea id="admin-name" class="large-input" placeholder="Wpisz lub podyktuj nazwę przedmiotu..."></textarea>
                 <button class="mic-btn" onclick="nasluchujNazwy()">🎤 Dyktuj nazwę głosem</button>
             </div>
             <div class="form-group"><input type="number" id="admin-price" placeholder="Cena w zł"></div>
@@ -786,11 +793,11 @@
                 const card = document.createElement('div');
                 card.className = 'admin-product-edit-card';
                 card.innerHTML = `
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="font-size: 0.85em; color: #666;">Nazwa produktu:</label>
+                        <textarea id="edit-name-${p.id}" class="large-input" style="height: 60px;">${p.nazwa}</textarea>
+                    </div>
                     <div class="admin-product-edit-grid">
-                        <div>
-                            <label style="font-size: 0.85em; color: #666;">Nazwa produktu:</label>
-                            <input type="text" id="edit-name-${p.id}" value="${p.nazwa}">
-                        </div>
                         <div>
                             <label style="font-size: 0.85em; color: #666;">Cena (zł):</label>
                             <input type="number" step="0.01" id="edit-price-${p.id}" value="${p.cena}">
@@ -799,16 +806,14 @@
                             <label style="font-size: 0.85em; color: #666;">Stan (szt.):</label>
                             <input type="number" id="edit-stock-${p.id}" value="${p.magazyn}">
                         </div>
-                    </div>
-                    <div class="admin-product-edit-grid" style="margin-top: 10px;">
                         <div>
                             <label style="font-size: 0.85em; color: #666;">Zniżka (%):</label>
                             <input type="number" id="edit-discount-${p.id}" value="${p.znizka}">
                         </div>
-                        <div style="grid-column: span 2;">
-                            <label style="font-size: 0.85em; color: #666;">Link do zdjęcia (URL):</label>
-                            <input type="text" id="edit-image-${p.id}" value="${p.zdjęcie}">
-                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label style="font-size: 0.85em; color: #666;">Link do zdjęcia (URL):</label>
+                        <input type="text" id="edit-image-${p.id}" value="${p.zdjęcie}">
                     </div>
                     <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
                         <button class="btn-save-prod" onclick="zapiszZmianyProduktu(${p.id})">Zapisz zmiany</button>
@@ -887,7 +892,6 @@
             });
         }
 
-        // Układ szczegółów produktu na pełną szerokość z opisem na samym dole
         function otwórzProdukt(id) {
             wyblanyProdukt = produkty.find(p => p.id === id);
             if (!wyblanyProdukt) return;
