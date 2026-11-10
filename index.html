@@ -158,6 +158,7 @@
             display: flex;
             flex-direction: column;
             text-align: left;
+            position: relative;
         }
         .product-card:hover { 
             transform: translateY(-6px); 
@@ -167,7 +168,22 @@
         .product-img { width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid #f0f0f0; }
         .product-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .product-card h3 { color: #1a1a2e; margin: 0 0 8px 0; font-size: 1.2em; }
-        .product-card .price { font-size: 1.3em; font-weight: bold; color: #2e7d32; margin-top: 10px; }
+        
+        .price-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .product-card .price { font-size: 1.3em; font-weight: bold; color: #2e7d32; }
+        .product-card .old-price { font-size: 1em; color: #888; text-decoration: line-through; }
+        .discount-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #eb1260;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
 
         /* Szczegóły produktu */
         #detail-screen {
@@ -194,7 +210,10 @@
         .detail-info h2 { color: #1a1a2e; font-size: 2.2em; margin-top: 0; }
         .detail-stock { color: #d97706; font-weight: bold; font-size: 1.1em; margin-bottom: 15px; }
         .detail-desc { color: #555; font-size: 1.1em; line-height: 1.6; margin: 20px 0; }
-        .detail-price { font-size: 2em; color: #2e7d32; font-weight: bold; margin: 20px 0; }
+        
+        .detail-price-box { display: flex; align-items: baseline; gap: 15px; margin: 20px 0; }
+        .detail-price { font-size: 2em; color: #2e7d32; font-weight: bold; }
+        .detail-old-price { font-size: 1.3em; color: #888; text-decoration: line-through; }
 
         .quantity-control { margin: 25px 0; display: flex; align-items: center; gap: 15px; }
         .quantity-control label { font-size: 1.1em; font-weight: bold; color: #333; }
@@ -215,10 +234,10 @@
         }
         .btn-add-cart:hover { background-color: #e6b800; }
 
-        /* Okna systemowe (Logowanie, Koszyk, Płatność, Admin) */
+        /* Okna systemowe */
         #auth-screen, #cart-screen, #payment-screen, #admin-screen { 
             display: none; 
-            max-width: 750px; 
+            max-width: 800px; 
             margin: 40px auto; 
             padding: 20px; 
             text-align: left; 
@@ -247,7 +266,24 @@
         .btn-paypal { background-color: #003087; }
         .btn-card { background-color: #2e7d32; }
 
-        /* Stylizowana sekcja zarządzania użytkownikami w panelu admina */
+        /* Karty edycji produktów w panelu admina */
+        .admin-product-edit-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .admin-product-edit-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        @media(max-width: 768px) {
+            .admin-product-edit-grid { grid-template-columns: 1fr; }
+        }
         .admin-user-card {
             background: #ffffff;
             border: 1px solid #e0e0e0;
@@ -257,7 +293,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
         }
         .user-info-text strong { color: #1a1a2e; font-size: 1.1em; }
         .user-badge {
@@ -270,12 +305,26 @@
             font-weight: bold;
             margin-top: 4px;
         }
-        .admin-action-buttons {
-            display: flex;
-            gap: 8px;
-        }
+        .admin-action-buttons { display: flex; gap: 8px; }
         .btn-delete { background: #d32f2f; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-grant { background: #0288d1; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-save-prod { background: #2e7d32; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        
+        .mic-btn {
+            background: #ffcb05;
+            border: 2px solid #d4a500;
+            color: #000;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .mic-btn:hover { background: #e6b800; }
 
         .back-btn { background-color: #e0e0e0; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; }
         .back-btn:hover { background-color: #d0d0d0; }
@@ -387,10 +436,15 @@
             <h2 style="color: #1a1a2e; margin-top: 0;">Panel Zarządzania Firmą ⚙️</h2>
             <p style="color: #666;">Zalogowano jako: <strong id="admin-user-display">Admin</strong></p>
 
-            <h3 style="margin-top: 25px;">Dodaj nowy produkt:</h3>
-            <div class="form-group"><input type="text" id="admin-name" placeholder="Nazwa przedmiotu"></div>
+            <h3 style="margin-top: 25px;">Dodaj nowy produkt (możesz podyktować nazwę głosem!):</h3>
+            <div class="form-group">
+                <label>Nazwa przedmiotu:</label>
+                <input type="text" id="admin-name" placeholder="Nazwa przedmiotu">
+                <button class="mic-btn" onclick="nasluchujNazwy()">🎤 Dyktuj nazwę głosem</button>
+            </div>
             <div class="form-group"><input type="number" id="admin-price" placeholder="Cena w zł"></div>
             <div class="form-group"><input type="number" id="admin-stock" placeholder="Stan magazynowy (szt.)"></div>
+            <div class="form-group"><input type="number" id="admin-discount" placeholder="Zniżka w % (opcjonalnie, np. 20)"></div>
             <div class="form-group"><input type="text" id="admin-image" placeholder="Link do zdjęcia (URL)"></div>
             <div class="form-group"><textarea id="admin-desc" placeholder="Opis produktu..."></textarea></div>
             <button class="btn-primary" style="width: 100%; border-radius: 8px; background-color: #2e7d32; color: #fff;" onclick="dodajNowyProduktAdmin()">+ Dodaj produkt do sklepu</button>
@@ -404,7 +458,8 @@
                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #ccc;">
             </div>
 
-            <h3>Zarządzaj produktami w sklepie:</h3>
+            <h3>Zarządzaj i edytuj produkty w sklepie:</h3>
+            <p style="color: #666; font-size: 0.95em; margin-bottom: 15px;">Możesz tu bezpośrednio zmieniać nazwy, ceny, zniżki lub stany magazynowe.</p>
             <div id="admin-products-list"></div>
         </div>
         <button class="back-btn" onclick="pokazSklep()">← Wyjdź z panelu</button>
@@ -426,6 +481,7 @@
                 nazwa: "Elite Trainer Box 30th Anniversary",
                 cena: 299.00,
                 magazyn: 12,
+                znizka: 0,
                 zdjęcie: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80",
                 opis: "Jubileuszowa edycja zestawu Elite Trainer Box wydana z okazji 30-lecia Pokémon! Zestaw zawiera 10 unikalnych boosterów rocznicowych, limitowane koszulki ochronne na karty z unikalnym wzorem, kości do gry, znaczniki oraz zafoliowaną kartę promocyjną."
             },
@@ -434,6 +490,7 @@
                 nazwa: "Booster Box - Najnowsza Seria",
                 cena: 649.00,
                 magazyn: 5,
+                znizka: 0,
                 zdjęcie: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=600&q=80",
                 opis: "Fabrycznie zamknięty w folii fabrycznej Booster Box zawierający aż 36 saszetek z nowej edycji. Daje najwyższą szansę na trafienie bardzo rzadkich kart typu Secret Rare oraz Alternate Art."
             },
@@ -442,6 +499,7 @@
                 nazwa: "Elite Trainer Box (Standard)",
                 cena: 229.00,
                 magazyn: 20,
+                znizka: 0,
                 zdjęcie: "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80",
                 opis: "Pełnowartościowy zestaw startowy zawierający 9 boosterów, koszulki na karty, przekładki do talii, oryginalne kostki do znaczników uszkodzeń oraz solidne pudełko do przechowywania kolekcji."
             },
@@ -450,6 +508,7 @@
                 nazwa: "Pojedynczy Booster",
                 cena: 21.99,
                 magazyn: 100,
+                znizka: 0,
                 zdjęcie: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80",
                 opis: "Oryginalnie zamknięty booster Pokémon TCG zawierający 10 losowych kart oraz cyfrową kod-kartę do wykorzystania w oficjalnej grze online."
             }
@@ -461,7 +520,6 @@
         let wyblanyProdukt = null;
         let wybranaMetodaPlatnosci = '';
 
-        // Inicjalizacja przycisków konta po załadowaniu
         aktualizujWidokKonta();
         aktualizujLicznik();
 
@@ -473,6 +531,29 @@
             } else {
                 localStorage.removeItem('tcg_zalogowany');
             }
+        }
+
+        // Funkcja rozpoznawania mowy (dyktowanie nazwy)
+        function nasluchujNazwy() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Twoja przeglądarka nie obsługuje funkcji rozpoznawania mowy.");
+                return;
+            }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'pl-PL';
+            recognition.start();
+
+            alert("Nasłuchiwanie... Powiedz nazwę produktu.");
+
+            recognition.onresult = function(event) {
+                const speechResult = event.results[0][0].transcript;
+                document.getElementById('admin-name').value = speechResult;
+            };
+
+            recognition.onerror = function(event) {
+                alert("Wystąpił błąd podczas rozpoznawania mowy.");
+            };
         }
 
         // Logowanie i Rejestracja
@@ -629,25 +710,51 @@
             const nazwa = document.getElementById('admin-name').value.trim();
             const cena = parseFloat(document.getElementById('admin-price').value);
             const magazyn = parseInt(document.getElementById('admin-stock').value);
+            const znizka = parseFloat(document.getElementById('admin-discount').value) || 0;
             const zdjęcie = document.getElementById('admin-image').value.trim() || 'https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=600&q=80';
             const opis = document.getElementById('admin-desc').value.trim();
 
             if (!nazwa || isNaN(cena) || isNaN(magazyn) || !opis) {
-                alert("Wypełnij poprawnie wszystkie pola!");
+                alert("Wypełnij poprawnie wymagane pola (nazwa, cena, stan, opis)!");
                 return;
             }
 
             const nowyId = produkty.length > 0 ? Math.max(...produkty.map(p => p.id)) + 1 : 1;
-            produkty.push({ id: nowyId, nazwa, cena, magazyn, zdjęcie, opis });
+            produkty.push({ id: nowyId, nazwa, cena, magazyn, znizka, zdjęcie, opis });
             zapiszStan();
 
             document.getElementById('admin-name').value = '';
             document.getElementById('admin-price').value = '';
             document.getElementById('admin-stock').value = '';
+            document.getElementById('admin-discount').value = '';
             document.getElementById('admin-image').value = '';
             document.getElementById('admin-desc').value = '';
 
             alert("Pomyślnie dodano nowy produkt do sklepu!");
+            renderujAdminListaProduktow();
+        }
+
+        function zapiszZmianyProduktu(id) {
+            const p = produkty.find(prod => prod.id === id);
+            if (!p) return;
+
+            const nowaNazwa = document.getElementById(`edit-name-${id}`).value.trim();
+            const nowaCena = parseFloat(document.getElementById(`edit-price-${id}`).value);
+            const nowyStan = parseInt(document.getElementById(`edit-stock-${id}`).value);
+            const nowaZnizka = parseFloat(document.getElementById(`edit-discount-${id}`).value) || 0;
+
+            if (!nowaNazwa || isNaN(nowaCena) || isNaN(nowyStan)) {
+                alert("Uzupełnij poprawnie dane edytowanego produktu!");
+                return;
+            }
+
+            p.nazwa = nowaNazwa;
+            p.cena = nowaCena;
+            p.magazyn = nowyStan;
+            p.znizka = nowaZnizka;
+
+            zapiszStan();
+            alert(`Zapisano zmiany dla produktu: ${p.nazwa}`);
             renderujAdminListaProduktow();
         }
 
@@ -663,16 +770,33 @@
             const container = document.getElementById('admin-products-list');
             container.innerHTML = '';
             produkty.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'admin-user-card';
-                div.innerHTML = `
-                    <div class="user-info-text">
-                        <strong>${p.nazwa}</strong><br>
-                        <span style="color: #2e7d32; font-weight: bold;">${p.cena.toFixed(2)} zł</span> (Stan: ${p.magazyn} szt.)
+                const card = document.createElement('div');
+                card.className = 'admin-product-edit-card';
+                card.innerHTML = `
+                    <div class="admin-product-edit-grid">
+                        <div>
+                            <label style="font-size: 0.85em; color: #666;">Nazwa produktu:</label>
+                            <input type="text" id="edit-name-${p.id}" value="${p.nazwa}">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85em; color: #666;">Cena (zł):</label>
+                            <input type="number" step="0.01" id="edit-price-${p.id}" value="${p.cena}">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85em; color: #666;">Stan (szt.):</label>
+                            <input type="number" id="edit-stock-${p.id}" value="${p.magazyn}">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85em; color: #666;">Zniżka (%):</label>
+                            <input type="number" id="edit-discount-${p.id}" value="${p.znizka}">
+                        </div>
                     </div>
-                    <button class="btn-delete" onclick="usunProdukt(${p.id})">Usuń produkt</button>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                        <button class="btn-save-prod" onclick="zapiszZmianyProduktu(${p.id})">Zapisz zmiany</button>
+                        <button class="btn-delete" onclick="usunProdukt(${p.id})">Usuń produkt</button>
+                    </div>
                 `;
-                container.appendChild(div);
+                container.appendChild(card);
             });
         }
 
@@ -717,17 +841,27 @@
             kontener.innerHTML = '';
             
             produkty.forEach(produkt => {
+                let finalnaCena = produkt.cena;
+                let maZnizke = produkt.znizka > 0 && produkt.znizka < 100;
+                if (maZnizke) {
+                    finalnaCena = produkt.cena * (1 - produkt.znizka / 100);
+                }
+
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.onclick = () => otwórzProdukt(produkt.id);
                 card.innerHTML = `
+                    ${maZnizke ? `<div class="discount-badge">-${produkt.znizka}%</div>` : ''}
                     <img src="${produkt.zdjęcie}" alt="${produkt.nazwa}" class="product-img">
                     <div class="product-info">
                         <div>
                             <h3>${produkt.nazwa}</h3>
                             <p style="color: #666; font-size: 0.9em; margin: 5px 0;">Dostępność: <strong>${produkt.magazyn} szt.</strong></p>
                         </div>
-                        <div class="price">${produkt.cena.toFixed(2)} zł</div>
+                        <div class="price-container">
+                            <div class="price">${finalnaCena.toFixed(2)} zł</div>
+                            ${maZnizke ? `<div class="old-price">${produkt.cena.toFixed(2)} zł</div>` : ''}
+                        </div>
                     </div>
                 `;
                 kontener.appendChild(card);
@@ -741,6 +875,12 @@
             ukryjEkrany();
             document.getElementById('detail-screen').style.display = 'block';
             window.scrollTo(0, 0);
+
+            let finalnaCena = wyblanyProdukt.cena;
+            let maZnizke = wyblanyProdukt.znizka > 0 && wyblanyProdukt.znizka < 100;
+            if (maZnizke) {
+                finalnaCena = wyblanyProdukt.cena * (1 - wyblanyProdukt.znizka / 100);
+            }
 
             const container = document.getElementById('detail-content');
             container.innerHTML = `
@@ -757,7 +897,10 @@
                         <input type="number" id="quantity-input" value="1" min="1" max="${wyblanyProdukt.magazyn}" onchange="przeliczCene()">
                     </div>
                     
-                    <div class="detail-price">Łącznie: <span id="calculated-price">${wyblanyProdukt.cena.toFixed(2)}</span> zł</div>
+                    <div class="detail-price-box">
+                        <div class="detail-price">Łącznie: <span id="calculated-price">${finalnaCena.toFixed(2)}</span> zł</div>
+                        ${maZnizke ? `<div class="detail-old-price" id="calculated-old-price">${(wyblanyProdukt.cena * parseInt(document.getElementById('quantity-input')?.value || 1)).toFixed(2)} zł</div>` : ''}
+                    </div>
                     
                     <button class="btn-add-cart" onclick="dodajDoKoszyka()">Dodaj do koszyka 🛒</button>
                 </div>
@@ -773,8 +916,17 @@
                 input.value = ilosc;
             }
             
-            const lacznie = wyblanyProdukt.cena * ilosc;
+            let bazowaCena = wyblanyProdukt.cena;
+            let maZnizke = wyblanyProdukt.znizka > 0 && wyblanyProdukt.znizka < 100;
+            let finalnaJednostkowa = maZnizke ? bazowaCena * (1 - wyblanyProdukt.znizka / 100) : bazowaCena;
+
+            const lacznie = finalnaJednostkowa * ilosc;
             document.getElementById('calculated-price').innerText = lacznie.toFixed(2);
+            
+            const oldPriceEl = document.getElementById('calculated-old-price');
+            if (oldPriceEl) {
+                oldPriceEl.innerText = (bazowaCena * ilosc).toFixed(2) + ' zł';
+            }
         }
 
         function dodajDoKoszyka() {
@@ -791,6 +943,10 @@
                 return;
             }
 
+            let bazowaCena = wyblanyProdukt.cena;
+            let maZnizke = wyblanyProdukt.znizka > 0 && wyblanyProdukt.znizka < 100;
+            let cenaDoKoszyka = maZnizke ? bazowaCena * (1 - wyblanyProdukt.znizka / 100) : bazowaCena;
+
             const wKoszyku = koszyk.find(item => item.id === wyblanyProdukt.id);
             if (wKoszyku) {
                 wKoszyku.ilosc += ilosc;
@@ -798,7 +954,7 @@
                 koszyk.push({
                     id: wyblanyProdukt.id,
                     nazwa: wyblanyProdukt.nazwa,
-                    cena: wyblanyProdukt.cena,
+                    cena: cenaDoKoszyka,
                     ilosc: ilosc
                 });
             }
@@ -848,7 +1004,6 @@
             paymentSection.style.display = 'block';
         }
 
-        // Nowy system płatności (przejście do wpisywania danych)
         function przygotujPlatnosc(metoda) {
             wybranaMetodaPlatnosci = metoda;
             ukryjEkrany();
@@ -903,9 +1058,7 @@
             }
         }
 
-        // Finalizacja po podaniu danych (tutaj dopiero zmniejsza się stan magazynowy!)
         function finalizujPlatnosc() {
-            // Walidacja danych formularza płatności
             if (wybranaMetodaPlatnosci === 'BLIK') {
                 const code = document.getElementById('blik-code').value.trim();
                 if (code.length !== 6) {
@@ -926,7 +1079,7 @@
                 }
             }
 
-            // Dopiero teraz pobieramy opłatę i aktualizujemy stan magazynowy!
+            // Aktualizacja stanu magazynowego dopiero po udanej płatności
             koszyk.forEach(itemKoszyka => {
                 const p = produkty.find(prod => prod.id === itemKoszyka.id);
                 if (p) {
