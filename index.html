@@ -5,61 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TCGzone - Sklep Pokémon TCG</title>
     <style>
+        * { box-sizing: border-box; }
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #ff0055, #ffcc00, #00d2ff, #7928ca);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: #ffffff; 
+            background: #ffffff; /* Czyste, jasne tło */
+            color: #22223b; 
             margin: 0;
             padding: 0;
-            text-align: center;
+            min-height: 100vh;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Pasek nawigacji z koszykiem */
-        .navbar {
-            background: rgba(0, 0, 0, 0.85);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 2px solid #ffcb05;
-        }
-        .logo { font-size: 1.5em; font-weight: bold; color: #ffcb05; cursor: pointer; }
-        .cart-status {
+        /* Pływający przycisk koszyka w prawym górnym rogu */
+        .floating-cart {
+            position: fixed;
+            top: 20px;
+            right: 20px;
             background: #ffcb05;
             color: #000;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 10px 18px;
+            border-radius: 10px;
             font-weight: bold;
+            font-size: 1.05em;
             cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .cart-status:hover { transform: scale(1.05); }
-        
-        /* Ekran główny */
-        #home-screen {
-            min-height: 80vh;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transition: transform 0.2s, background-color 0.2s;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            padding: 20px;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=1200&q=80');
+            gap: 8px;
+            border: 2px solid #e0b000;
+        }
+        .floating-cart:hover {
+            transform: scale(1.05);
+            background-color: #f0be00;
+        }
+
+        /* Strona Główna (Startowa) */
+        #home-screen {
+            display: block;
+        }
+        .hero {
+            padding: 90px 20px;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=1200&q=80');
             background-size: cover;
             background-position: center;
+            color: #ffffff;
+            text-align: center;
+            border-bottom: 5px solid #ffcb05;
         }
-        h1 { color: #ffcb05; font-size: 3.5em; text-shadow: 3px 3px 8px rgba(0,0,0,0.9); margin-bottom: 10px; }
-        .subtitle { color: #ffffff; font-size: 1.4em; font-weight: bold; margin-bottom: 35px; }
+        .hero h1 { color: #ffcb05; font-size: 3.5em; margin: 0 0 10px 0; text-shadow: 2px 2px 5px rgba(0,0,0,0.8); }
+        .hero .subtitle { color: #00ffcc; font-size: 1.3em; font-weight: bold; margin-bottom: 30px; text-shadow: 1px 1px 4px rgba(0,0,0,0.8); }
         
         .btn-primary {
             background-color: #ffcb05;
@@ -68,82 +63,157 @@
             padding: 16px 36px;
             font-size: 1.2em;
             font-weight: bold;
-            border-radius: 35px;
+            border-radius: 30px;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(255, 203, 5, 0.6);
-            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 203, 5, 0.4);
+            transition: transform 0.2s, background-color 0.2s;
         }
-        .btn-primary:hover { transform: scale(1.08); background-color: #e6b800; }
+        .btn-primary:hover { background-color: #e6b800; transform: scale(1.05); }
 
-        /* Ekran Sklepu */
-        #shop-screen { display: none; padding: 40px 20px; }
-        .shop-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; max-width: 1200px; margin: 30px auto; }
-        
-        .product-card { 
-            border: 2px solid #ffcb05; 
-            border-radius: 15px; 
-            width: 270px; 
-            background: rgba(26, 26, 46, 0.95); 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s;
+        /* Sekcja O nas na stronie głównej */
+        .about-section {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+            text-align: center;
         }
-        .product-card:hover { transform: translateY(-8px); }
-        .product-img { width: 100%; height: 190px; object-fit: cover; border-bottom: 2px solid #ffcb05; }
-        .product-info { padding: 15px; text-align: left; }
-        .product-card h3 { color: #ffcb05; margin: 0 0 8px 0; font-size: 1.2em; }
-        .product-card .price { font-size: 1.4em; font-weight: bold; color: #00ffcc; margin-top: 10px; }
-
-        /* Ekran Szczegółów Produktu */
-        #detail-screen { display: none; padding: 40px 20px; max-width: 750px; margin: 0 auto; }
-        .detail-card {
-            background: rgba(26, 26, 46, 0.95);
+        .about-box {
+            background: #f8f9fa;
             border: 2px solid #ffcb05;
             border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            padding: 35px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        .about-box h2 { color: #1a1a2e; margin-top: 0; font-size: 2em; }
+        .about-box p { color: #444; line-height: 1.7; font-size: 1.1em; }
+
+        /* Widok katalogu produktów */
+        #shop-screen {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .shop-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); 
+            gap: 30px; 
+            margin-top: 30px;
+        }
+        .product-card { 
+            border: 2px solid #e0e0e0; 
+            border-radius: 15px; 
+            background: #ffffff; 
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
             text-align: left;
         }
-        .detail-img { width: 100%; height: 320px; object-fit: cover; border-radius: 10px; border: 2px solid #00ffcc; margin-bottom: 20px; }
-        .detail-card h2 { color: #ffcb05; font-size: 2.2em; margin-top: 0; }
-        .detail-price { font-size: 2em; color: #00ffcc; font-weight: bold; margin: 15px 0; }
-        
-        /* Wybór ilości */
-        .quantity-selector { margin: 20px 0; display: flex; align-items: center; gap: 15px; }
-        .quantity-selector label { font-size: 1.2em; font-weight: bold; }
-        .quantity-selector input {
-            width: 70px;
-            padding: 8px;
-            font-size: 1.2em;
-            border-radius: 8px;
+        .product-card:hover { 
+            transform: translateY(-6px); 
+            border-color: #ffcb05;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+        .product-img { width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid #f0f0f0; }
+        .product-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-card h3 { color: #1a1a2e; margin: 0 0 8px 0; font-size: 1.2em; }
+        .product-card .price { font-size: 1.3em; font-weight: bold; color: #2e7d32; margin-top: 10px; }
+
+        /* Widok szczegółów produktu */
+        #detail-screen {
+            display: none;
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .detail-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background: #f8f9fa;
             border: 2px solid #ffcb05;
-            background: #111;
-            color: #fff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            text-align: left;
+        }
+        @media (max-width: 768px) {
+            .detail-layout { grid-template-columns: 1fr; }
+        }
+        .detail-img { 
+            width: 100%; 
+            max-height: 450px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            border: 1px solid #ddd; 
+        }
+        .detail-info h2 { color: #1a1a2e; font-size: 2.2em; margin-top: 0; }
+        .detail-stock { color: #d97706; font-weight: bold; font-size: 1.1em; margin-bottom: 15px; }
+        .detail-desc { color: #555; font-size: 1.1em; line-height: 1.6; margin: 20px 0; }
+        .detail-price { font-size: 2em; color: #2e7d32; font-weight: bold; margin: 20px 0; }
+
+        .quantity-control {
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .quantity-control label { font-size: 1.1em; font-weight: bold; color: #333; }
+        .quantity-control input {
+            width: 80px;
+            padding: 8px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            border: 2px solid #ccc;
             text-align: center;
         }
 
-        /* Ekran Koszyka */
-        #cart-screen { display: none; padding: 40px 20px; max-width: 700px; margin: 0 auto; }
-        .cart-card {
-            background: rgba(26, 26, 46, 0.95);
-            border: 2px solid #ffcb05;
-            border-radius: 15px;
-            padding: 30px;
+        .btn-add-cart {
+            background-color: #ffcb05;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.15em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+            box-shadow: 0 4px 12px rgba(255, 203, 5, 0.3);
+        }
+        .btn-add-cart:hover { background-color: #e6b800; }
+
+        /* Widok Koszyka */
+        #cart-screen {
+            display: none;
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 20px;
             text-align: left;
+        }
+        .cart-box {
+            background: #f8f9fa;
+            border: 2px solid #ffcb05;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         }
         .cart-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #444;
-            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 0;
         }
-        .payment-methods { margin-top: 30px; text-align: center; }
+        .payment-methods { margin-top: 35px; text-align: center; }
         .pay-btn {
             padding: 14px 25px;
-            margin: 10px 5px;
-            font-size: 1.1em;
+            margin: 8px;
+            font-size: 1.05em;
             font-weight: bold;
             border: none;
             border-radius: 8px;
@@ -153,139 +223,159 @@
         .btn-blik { background-color: #eb1260; color: #fff; }
         .btn-paypal { background-color: #003087; color: #fff; }
         .btn-card { background-color: #2e7d32; color: #fff; }
-        .pay-btn:hover { opacity: 0.85; }
+        .pay-btn:hover { opacity: 0.9; }
 
         .back-btn {
-            background-color: #333;
-            color: #fff;
-            border: 2px solid #ffcb05;
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
             padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             margin-top: 20px;
+            transition: background 0.2s;
+        }
+        .back-btn:hover { background-color: #d0d0d0; }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+            margin-top: 60px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Górny Pasek Nawigacji -->
-    <div class="navbar">
-        <div class="logo" onclick="pokazStart()">TCG Zone ⚡</div>
-        <div class="cart-status" onclick="pokazKoszyk()">🛒 Koszyk (<span id="cart-count">0</span>)</div>
+    <!-- Koszyk w prawym górnym rogu -->
+    <div class="floating-cart" onclick="pokazKoszyk()">
+        🛒 Koszyk (<span id="cart-count">0</span>)
     </div>
 
-    <!-- 1. EKRAN STARTOWY -->
+    <!-- 1. STRONA GŁÓWNA -->
     <div id="home-screen">
-        <h1>TCG Zone</h1>
-        <p class="subtitle">Oficjalny sklep z zestawami i kartami Pokémon TCG</p>
-        <button class="btn-primary" onclick="otworzSklep()">Przejdź do świata Pokémon</button>
-    </div>
+        <div class="hero">
+            <h1>TCG Zone</h1>
+            <p class="subtitle">Oficjalny sklep z zestawami i kartami Pokémon TCG</p>
+            <button class="btn-primary" onclick="pokazSklep()">Przejdź do świata Pokémon</button>
+        </div>
 
-    <!-- 2. EKRAN SKLEPU (KATALOG) -->
-    <div id="shop-screen">
-        <h1 style="color: #ffcb05;">Katalog Sklepu TCGzone</h1>
-        <p>Kliknij w dowolny produkt, aby wybrać ilość i zobaczyć pełny opis!</p>
-        
-        <div class="shop-grid" id="product-list"></div>
-        <button class="back-btn" onclick="pokazStart()">← Strona Główna</button>
-    </div>
-
-    <!-- 3. EKRAN SZCZEGÓŁÓW PRODUKTU Z KALKULATOREM CENY -->
-    <div id="detail-screen">
-        <div class="detail-card" id="detail-content"></div>
-        <button class="back-btn" onclick="otworzSklep()">← Wróć do katalogu</button>
-    </div>
-
-    <!-- 4. EKRAN KOSZYKA I PŁATNOŚCI -->
-    <div id="cart-screen">
-        <div class="cart-card">
-            <h2 style="color: #ffcb05; margin-top: 0;">Twój Koszyk 🛒</h2>
-            <div id="cart-items-list">
-                <p>Twój koszyk jest pusty.</p>
+        <div class="about-section">
+            <div class="about-box">
+                <h2>O naszej firmie i pasji</h2>
+                <p><strong>TCG Zone</strong> to miejsce stworzone z pasji do uniwersum Pokémon. Oferujemy w 100% oryginalne, fabrycznie zafoliowane produkty – od pojedynczych boosterów, przez Elite Trainer Boxy, aż po rzadkie wydania kolekcjonerskie. Dbamy o bezpieczną wysyłkę i pewne źródło, aby każda otwarta paczka przynosiła mnóstwo radości!</p>
             </div>
+        </div>
+    </div>
+
+    <!-- 2. KATALOG PRODUKTÓW -->
+    <div id="shop-screen">
+        <h1 style="color: #1a1a2e; font-size: 2.5em; margin-bottom: 5px;">Katalog Produktów</h1>
+        <p style="color: #666; font-size: 1.1em;">Wybierz interesujący Cię produkt, aby zobaczyć szczegóły i stan magazynowy.</p>
+        <div class="shop-grid" id="product-list"></div>
+        <button class="back-btn" onclick="pokazStart()" style="margin-top: 40px;">← Powrót do strony głównej</button>
+    </div>
+
+    <!-- 3. SZCZEGÓŁY PRODUKTU -->
+    <div id="detail-screen">
+        <div class="detail-layout" id="detail-content"></div>
+        <button class="back-btn" onclick="pokazSklep()">← Powrót do katalogu</button>
+    </div>
+
+    <!-- 4. KOSZYK I PŁATNOŚCI -->
+    <div id="cart-screen">
+        <div class="cart-box">
+            <h2 style="color: #1a1a2e; margin-top: 0;">Twój Koszyk 🛒</h2>
+            <div id="cart-items-list"><p>Twój koszyk jest pusty.</p></div>
             
-            <h3 style="color: #00ffcc; text-align: right; margin-top: 20px;">
+            <h3 style="color: #2e7d32; text-align: right; margin-top: 25px;">
                 Łącznie do zapłaty: <span id="cart-total">0.00 zł</span>
             </h3>
 
             <div class="payment-methods" id="payment-section" style="display: none;">
-                <h4>Wybierz metodę płatności:</h4>
-                <button class="pay-btn btn-blik" onclick="zaplac('BLIK')">Zapłać BLIK-iem</button>
-                <button class="pay-btn btn-paypal" onclick="zaplac('PayPal')">Zapłać przez PayPal</button>
-                <button class="pay-btn btn-card" onclick="zaplac('Karta Bankowa')">Karta Płatnicza</button>
+                <h3>Wybierz metodę płatności:</h3>
+                <button class="pay-btn btn-blik" onclick="finalizujZakup('BLIK')">BLIK</button>
+                <button class="pay-btn btn-paypal" onclick="finalizujZakup('PayPal')">PayPal</button>
+                <button class="pay-btn btn-card" onclick="finalizujZakup('Karta Bankowa')">Karta Płatnicza</button>
             </div>
         </div>
-        <button class="back-btn" onclick="otworzSklep()">← Kontynuuj zakupy</button>
+        <button class="back-btn" onclick="pokazSklep()">← Kontynuuj zakupy</button>
     </div>
 
+    <footer>
+        <p>&copy; 2026 TCG Zone. Wszelkie prawa zastrzeżone.</p>
+    </footer>
+
     <script>
-        // =========================================================================
-        // BAZA PRODUKTÓW - MOŻESZ TU PROSTO EDYTOWAĆ OPISY, CENY I ZDJĘCIA!
-        // =========================================================================
+        // BAZA PRODUKTÓW (Możesz tu swobodnie zmieniać opisy, ceny i stan magazynowy)
         const produkty = [
             {
                 id: 1,
                 nazwa: "Elite Trainer Box 30th Anniversary",
-                cenaJednostkowa: 299.00,
+                cena: 299.00,
+                magazyn: 12,
                 zdjęcie: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80",
-                opis: "Wyjątkowa, rocznicowa edycja Elite Trainer Box 30th Anniversary! Zestaw zawiera 10 specjalnych boosterów, unikalne koszulki na karty z jubileuszowym logo, metalową kostkę oraz rzadką kartę promocyjną."
+                opis: "Jubileuszowa edycja zestawu Elite Trainer Box wydana z okazji 30-lecia Pokémon! Zestaw zawiera 10 unikalnych boosterów rocznicowych, limitowane koszulki ochronne na karty z unikalnym wzorem, kości do gry, znaczniki oraz zafoliowaną kartę promocyjną."
             },
             {
                 id: 2,
                 nazwa: "Booster Box - Najnowsza Seria",
-                cenaJednostkowa: 649.00,
+                cena: 649.00,
+                magazyn: 5,
                 zdjęcie: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=600&q=80",
-                opis: "Fabrycznie zafoliowany Booster Box zawierający aż 36 oryginalnych boosterów. Najlepszy sposób na zdobycie najrzadszych kart z nowej edycji!"
+                opis: "Fabrycznie zamknięty w folii fabrycznej Booster Box zawierający aż 36 saszetek z nowej edycji. Daje najwyższą szansę na trafienie bardzo rzadkich kart typu Secret Rare oraz Alternate Art."
             },
             {
                 id: 3,
                 nazwa: "Elite Trainer Box (Standard)",
-                cenaJednostkowa: 229.00,
+                cena: 229.00,
+                magazyn: 20,
                 zdjęcie: "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80",
-                opis: "Oficjalny zestaw gracza TCG: 9 boosterów, przewodniki, 65 koszulek na karty, kości do gry i kolekcjonerskie pudełko z przekładkami."
+                opis: "Pełnowartościowy zestaw startowy zawierający 9 boosterów, koszulki na karty, przekładki do talii, oryginalne kostki do znaczników uszkodzeń oraz solidne pudełko do przechowywania kolekcji."
             },
             {
                 id: 4,
                 nazwa: "Pojedynczy Booster",
-                cenaJednostkowa: 21.99,
+                cena: 21.99,
+                magazyn: 100,
                 zdjęcie: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80",
-                opis: "Oryginalna saszetka z 10 losowymi kartami Pokémon TCG oraz kodem do wersji online."
+                opis: "Oryginalnie zamknięty booster Pokémon TCG zawierający 10 losowych kart oraz cyfrową kod-kartę do wykorzystania w oficjalnej grze online."
             }
         ];
 
         let koszyk = [];
         let wyblanyProdukt = null;
 
-        // Przełączanie ekranów
-        function otworzSklep() {
-            ukryjWszystkie();
+        function pokazStart() {
+            ukryjEkrany();
+            document.getElementById('home-screen').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function pokazSklep() {
+            ukryjEkrany();
             document.getElementById('shop-screen').style.display = 'block';
             window.scrollTo(0, 0);
             renderujProdukty();
         }
 
-        function pokazStart() {
-            ukryjWszystkie();
-            document.getElementById('home-screen').style.display = 'flex';
-            window.scrollTo(0, 0);
-        }
-
         function pokazKoszyk() {
-            ukryjWszystkie();
+            ukryjEkrany();
             document.getElementById('cart-screen').style.display = 'block';
             window.scrollTo(0, 0);
             renderujKoszyk();
         }
 
-        function ukryjWszystkie() {
+        function ukryjEkrany() {
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('shop-screen').style.display = 'none';
             document.getElementById('detail-screen').style.display = 'none';
             document.getElementById('cart-screen').style.display = 'none';
         }
 
-        // Renderowanie listy produktów
         function renderujProdukty() {
             const kontener = document.getElementById('product-list');
             kontener.innerHTML = '';
@@ -293,118 +383,143 @@
             produkty.forEach(produkt => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
-                card.onclick = () => pokazSzczegoly(produkt.id);
+                card.onclick = () => otwórzProdukt(produkt.id);
                 card.innerHTML = `
                     <img src="${produkt.zdjęcie}" alt="${produkt.nazwa}" class="product-img">
                     <div class="product-info">
-                        <h3>${produkt.nazwa}</h3>
-                        <div class="price">${produkt.cenaJednostkowa.toFixed(2)} zł</div>
+                        <div>
+                            <h3>${produkt.nazwa}</h3>
+                            <p style="color: #666; font-size: 0.9em; margin: 5px 0;">Dostępność: <strong>${produkt.magazyn} szt.</strong></p>
+                        </div>
+                        <div class="price">${produkt.cena.toFixed(2)} zł</div>
                     </div>
                 `;
                 kontener.appendChild(card);
             });
         }
 
-        // Otwieranie karty szczegółowej produktu z kalkulatorem
-        function pokazSzczegoly(id) {
+        function otwórzProdukt(id) {
             wyblanyProdukt = produkty.find(p => p.id === id);
             if (!wyblanyProdukt) return;
 
-            ukryjWszystkie();
+            ukryjEkrany();
             document.getElementById('detail-screen').style.display = 'block';
             window.scrollTo(0, 0);
 
-            const detailContent = document.getElementById('detail-content');
-            detailContent.innerHTML = `
-                <img src="${wyblanyProdukt.zdjęcie}" class="detail-img">
-                <h2>${wyblanyProdukt.nazwa}</h2>
-                <p style="color: #ccc; font-size: 1.1em;">${wyblanyProdukt.opis}</p>
-                
-                <div class="quantity-selector">
-                    <label for="ilosc">Ilość sztuk:</label>
-                    <input type="number" id="ilosc" value="1" min="1" max="99" onchange="aktualizujCenePrzedmiotu()">
+            const container = document.getElementById('detail-content');
+            container.innerHTML = `
+                <div>
+                    <img src="${wyblanyProdukt.zdjęcie}" class="detail-img">
                 </div>
-                
-                <div class="detail-price">Cena łącznie: <span id="total-item-price">${wyblanyProdukt.cenaJednostkowa.toFixed(2)}</span> zł</div>
-                
-                <button class="btn-primary" style="width: 100%; margin-top: 15px;" onclick="dodajDoKoszykaZIloscia()">Dodaj do koszyka 🛒</button>
+                <div class="detail-info">
+                    <h2>${wyblanyProdukt.nazwa}</h2>
+                    <div class="detail-stock">Dostęp w magazynie: ${wyblanyProdukt.magazyn} szt.</div>
+                    <div class="detail-desc">${wyblanyProdukt.opis}</div>
+                    
+                    <div class="quantity-control">
+                        <label for="quantity-input">Ilość sztuk:</label>
+                        <input type="number" id="quantity-input" value="1" min="1" max="${wyblanyProdukt.magazyn}" onchange="przeliczCene()">
+                    </div>
+                    
+                    <div class="detail-price">Łącznie: <span id="calculated-price">${wyblanyProdukt.cena.toFixed(2)}</span> zł</div>
+                    
+                    <button class="btn-add-cart" onclick="dodajDoKoszyka()">Dodaj do koszyka 🛒</button>
+                </div>
             `;
         }
 
-        // Dynamiczne przeliczanie ceny po zmianie ilości
-        function aktualizujCenePrzedmiotu() {
-            const ilosc = parseInt(document.getElementById('ilosc').value) || 1;
-            const suma = wyblanyProdukt.cenaJednostkowa * ilosc;
-            document.getElementById('total-item-price').innerText = suma.toFixed(2);
+        function przeliczCene() {
+            const input = document.getElementById('quantity-input');
+            let ilosc = parseInt(input.value) || 1;
+            
+            if (ilosc > wyblanyProdukt.magazyn) {
+                ilosc = wyblanyProdukt.magazyn;
+                input.value = ilosc;
+            }
+            
+            const lacznie = wyblanyProdukt.cena * ilosc;
+            document.getElementById('calculated-price').innerText = lacznie.toFixed(2);
         }
 
-        // Dodawanie przedmiotu do koszyka
-        function dodajDoKoszykaZIloscia() {
-            const ilosc = parseInt(document.getElementById('ilosc').value) || 1;
+        function dodajDoKoszyka() {
+            const ilosc = parseInt(document.getElementById('quantity-input').value) || 1;
             
-            const istniejący = koszyk.find(item => item.id === wyblanyProdukt.id);
-            if (istniejący) {
-                istniejący.ilosc += ilosc;
+            if (wyblanyProdukt.magazyn < ilosc) {
+                alert("Niestety nie mamy tylu sztuk w magazynie!");
+                return;
+            }
+
+            const wKoszyku = koszyk.find(item => item.id === wyblanyProdukt.id);
+            if (wKoszyku) {
+                wKoszyku.ilosc += ilosc;
             } else {
                 koszyk.push({
                     id: wyblanyProdukt.id,
                     nazwa: wyblanyProdukt.nazwa,
-                    cenaJednostkowa: wyblanyProdukt.cenaJednostkowa,
+                    cena: wyblanyProdukt.cena,
                     ilosc: ilosc
                 });
             }
 
-            aktualizujLicznikKoszyka();
+            aktualizujLicznik();
             alert(`Dodano do koszyka: ${wyblanyProdukt.nazwa} (${ilosc} szt.)`);
-            otworzSklep();
+            pokazSklep();
         }
 
-        function aktualizujLicznikKoszyka() {
-            const lacznaIlosc = koszyk.reduce((sum, item) => sum + item.ilosc, 0);
-            document.getElementById('cart-count').innerText = lacznaIlosc;
+        function aktualizujLicznik() {
+            const sumaSztuk = koszyk.reduce((sum, item) => sum + item.ilosc, 0);
+            document.getElementById('cart-count').innerText = sumaSztuk;
         }
 
-        // Wyświetlanie zawartości koszyka
         function renderujKoszyk() {
-            const kontener = document.getElementById('cart-items-list');
-            const podsumowanieTotal = document.getElementById('cart-total');
-            const sekcjaPlatnosci = document.getElementById('payment-section');
+            const container = document.getElementById('cart-items-list');
+            const totalSpan = document.getElementById('cart-total');
+            const paymentSection = document.getElementById('payment-section');
 
             if (koszyk.length === 0) {
-                kontener.innerHTML = '<p>Twój koszyk jest pusty.</p>';
-                podsumowanieTotal.innerText = '0.00 zł';
-                sekcjaPlatnosci.style.display = 'none';
+                container.innerHTML = '<p style="color: #666;">Twój koszyk jest pusty.</p>';
+                totalSpan.innerText = '0.00 zł';
+                paymentSection.style.display = 'none';
                 return;
             }
 
-            kontener.innerHTML = '';
-            let sumaCalkowita = 0;
+            container.innerHTML = '';
+            let suma = 0;
 
             koszyk.forEach(item => {
-                const iloscWartosc = item.cenaJednostkowa * item.ilosc;
-                sumaCalkowita += iloscWartosc;
+                const iloscKwota = item.cena * item.ilosc;
+                suma += iloscKwota;
 
                 const row = document.createElement('div');
                 row.className = 'cart-item';
                 row.innerHTML = `
                     <div>
-                        <strong>${item.nazwa}</strong><br>
-                        <small>${item.ilosc} szt. × ${item.cenaJednostkowa.toFixed(2)} zł</small>
+                        <strong style="color: #1a1a2e; font-size: 1.1em;">${item.nazwa}</strong><br>
+                        <small style="color: #666;">Ilość: ${item.ilosc} szt. × ${item.cena.toFixed(2)} zł</small>
                     </div>
-                    <div style="font-weight: bold; color: #00ffcc;">${iloscWartosc.toFixed(2)} zł</div>
+                    <div style="font-weight: bold; color: #2e7d32; font-size: 1.2em;">${iloscKwota.toFixed(2)} zł</div>
                 `;
-                kontener.appendChild(row);
+                container.appendChild(row);
             });
 
-            podsumowanieTotal.innerText = sumaCalkowita.toFixed(2) + ' zł';
-                sekcjaPlatnosci.style.display = 'block';
+            totalSpan.innerText = suma.toFixed(2) + ' zł';
+            paymentSection.style.display = 'block';
         }
 
-        function zaplac(metoda) {
-            alert(`Dziękujemy za złożenie zamówienia! Wybrano płatność: ${metoda}. System przekierowuje do płatności...`);
+        function finalizujZakup(metoda) {
+            // Automatyczne pomniejszanie stanu magazynowego
+            koszyk.forEach(itemKoszyka => {
+                const p = produkty.find(prod => prod.id === itemKoszyka.id);
+                if (p) {
+                    p.magazyn -= itemKoszyka.ilosc;
+                    if (p.magazyn < 0) p.magazyn = 0;
+                }
+            });
+
+            alert(`Dziękujemy za zamówienie! Wybrano metodę płatności: ${metoda}. Stan magazynowy został zaktualizowany!`);
             koszyk = [];
-            aktualizujLicznikKoszyka();
-            pokazStart();
+            aktualizujLicznik();
+            pokazSklep();
         }
     </script>
 </body>
