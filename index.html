@@ -8,53 +8,62 @@
         * { box-sizing: border-box; }
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #ffffff; /* Czyste, jasne tło */
+            background: #ffffff; 
             color: #22223b; 
             margin: 0;
             padding: 0;
             min-height: 100vh;
+            scroll-behavior: smooth;
         }
 
-        /* Pływający przycisk koszyka w prawym górnym rogu */
-        .floating-cart {
+        /* Górny pasek nawigacyjny */
+        .top-bar {
             position: fixed;
             top: 20px;
             right: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
             background: #ffcb05;
             color: #000;
             padding: 10px 18px;
             border-radius: 10px;
             font-weight: bold;
-            font-size: 1.05em;
+            font-size: 1em;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
             transition: transform 0.2s, background-color 0.2s;
+            border: 2px solid #e0b000;
             display: flex;
             align-items: center;
-            gap: 8px;
-            border: 2px solid #e0b000;
+            gap: 6px;
         }
-        .floating-cart:hover {
+        .nav-btn:hover {
             transform: scale(1.05);
             background-color: #f0be00;
         }
+        .user-btn {
+            background: #ffffff;
+            color: #1a1a2e;
+            border: 2px solid #ffcb05;
+        }
 
         /* Strona Główna (Startowa) */
-        #home-screen {
-            display: block;
-        }
+        #home-screen { display: block; }
         .hero {
-            padding: 90px 20px;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=1200&q=80');
+            padding: 120px 20px;
+            background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=1200&q=80');
             background-size: cover;
             background-position: center;
             color: #ffffff;
             text-align: center;
             border-bottom: 5px solid #ffcb05;
         }
-        .hero h1 { color: #ffcb05; font-size: 3.5em; margin: 0 0 10px 0; text-shadow: 2px 2px 5px rgba(0,0,0,0.8); }
-        .hero .subtitle { color: #00ffcc; font-size: 1.3em; font-weight: bold; margin-bottom: 30px; text-shadow: 1px 1px 4px rgba(0,0,0,0.8); }
+        .hero h1 { color: #ffcb05; font-size: 3.8em; margin: 0 0 10px 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.9); }
+        .hero .subtitle { color: #00ffcc; font-size: 1.4em; font-weight: bold; margin-bottom: 35px; text-shadow: 1px 1px 5px rgba(0,0,0,0.9); }
         
         .btn-primary {
             background-color: #ffcb05;
@@ -70,10 +79,9 @@
         }
         .btn-primary:hover { background-color: #e6b800; transform: scale(1.05); }
 
-        /* Sekcja O nas na stronie głównej */
         .about-section {
             max-width: 900px;
-            margin: 60px auto;
+            margin: 80px auto;
             padding: 0 20px;
             text-align: center;
         }
@@ -81,13 +89,13 @@
             background: #f8f9fa;
             border: 2px solid #ffcb05;
             border-radius: 15px;
-            padding: 35px;
+            padding: 40px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
-        .about-box h2 { color: #1a1a2e; margin-top: 0; font-size: 2em; }
-        .about-box p { color: #444; line-height: 1.7; font-size: 1.1em; }
+        .about-box h2 { color: #1a1a2e; margin-top: 0; font-size: 2.2em; }
+        .about-box p { color: #444; line-height: 1.8; font-size: 1.15em; }
 
-        /* Widok katalogu produktów */
+        /* Katalog produktów */
         #shop-screen {
             display: none;
             max-width: 1200px;
@@ -144,33 +152,15 @@
         @media (max-width: 768px) {
             .detail-layout { grid-template-columns: 1fr; }
         }
-        .detail-img { 
-            width: 100%; 
-            max-height: 450px; 
-            object-fit: cover; 
-            border-radius: 12px; 
-            border: 1px solid #ddd; 
-        }
+        .detail-img { width: 100%; max-height: 450px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd; }
         .detail-info h2 { color: #1a1a2e; font-size: 2.2em; margin-top: 0; }
         .detail-stock { color: #d97706; font-weight: bold; font-size: 1.1em; margin-bottom: 15px; }
         .detail-desc { color: #555; font-size: 1.1em; line-height: 1.6; margin: 20px 0; }
         .detail-price { font-size: 2em; color: #2e7d32; font-weight: bold; margin: 20px 0; }
 
-        .quantity-control {
-            margin: 25px 0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .quantity-control { margin: 25px 0; display: flex; align-items: center; gap: 15px; }
         .quantity-control label { font-size: 1.1em; font-weight: bold; color: #333; }
-        .quantity-control input {
-            width: 80px;
-            padding: 8px;
-            font-size: 1.1em;
-            border-radius: 8px;
-            border: 2px solid #ccc;
-            text-align: center;
-        }
+        .quantity-control input { width: 80px; padding: 8px; font-size: 1.1em; border-radius: 8px; border: 2px solid #ccc; text-align: center; }
 
         .btn-add-cart {
             background-color: #ffcb05;
@@ -187,72 +177,52 @@
         }
         .btn-add-cart:hover { background-color: #e6b800; }
 
-        /* Widok Koszyka */
-        #cart-screen {
-            display: none;
-            max-width: 750px;
-            margin: 40px auto;
-            padding: 20px;
-            text-align: left;
+        /* Modale / Logowanie */
+        #auth-screen, #cart-screen, #admin-screen { 
+            display: none; 
+            max-width: 750px; 
+            margin: 40px auto; 
+            padding: 20px; 
+            text-align: left; 
         }
-        .cart-box {
-            background: #f8f9fa;
-            border: 2px solid #ffcb05;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        .custom-box { 
+            background: #f8f9fa; 
+            border: 2px solid #ffcb05; 
+            border-radius: 20px; 
+            padding: 35px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08); 
         }
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 15px 0;
-        }
-        .payment-methods { margin-top: 35px; text-align: center; }
-        .pay-btn {
-            padding: 14px 25px;
-            margin: 8px;
-            font-size: 1.05em;
-            font-weight: bold;
-            border: none;
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px;
             border-radius: 8px;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            border: 1px solid #ccc;
+            font-size: 1em;
         }
+
+        .cart-item, .user-item-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; padding: 15px 0; }
+        .payment-methods { margin-top: 35px; text-align: center; }
+        .pay-btn { padding: 14px 25px; margin: 8px; font-size: 1.05em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; }
         .btn-blik { background-color: #eb1260; color: #fff; }
         .btn-paypal { background-color: #003087; color: #fff; }
         .btn-card { background-color: #2e7d32; color: #fff; }
-        .pay-btn:hover { opacity: 0.9; }
+        .btn-delete { background: #d32f2f; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+        .btn-grant { background: #0288d1; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; margin-right: 5px; }
 
-        .back-btn {
-            background-color: #e0e0e0;
-            color: #333;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 20px;
-            transition: background 0.2s;
-        }
+        .back-btn { background-color: #e0e0e0; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; }
         .back-btn:hover { background-color: #d0d0d0; }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #777;
-            font-size: 0.9em;
-            border-top: 1px solid #eee;
-            margin-top: 60px;
-        }
+        footer { text-align: center; padding: 20px; color: #777; font-size: 0.9em; border-top: 1px solid #eee; margin-top: 60px; }
     </style>
 </head>
 <body>
 
-    <!-- Koszyk w prawym górnym rogu -->
-    <div class="floating-cart" onclick="pokazKoszyk()">
-        🛒 Koszyk (<span id="cart-count">0</span>)
+    <!-- Górny Pasek Nawigacyjny -->
+    <div class="top-bar">
+        <div class="nav-btn user-btn" id="user-menu-btn" onclick="otworzEkranKonta()">👤 Zaloguj się</div>
+        <div class="nav-btn" onclick="pokazKoszyk()">🛒 Koszyk (<span id="cart-count">0</span>)</div>
     </div>
 
     <!-- 1. STRONA GŁÓWNA -->
@@ -266,7 +236,7 @@
         <div class="about-section">
             <div class="about-box">
                 <h2>O naszej firmie i pasji</h2>
-                <p><strong>TCG Zone</strong> to miejsce stworzone z pasji do uniwersum Pokémon. Oferujemy w 100% oryginalne, fabrycznie zafoliowane produkty – od pojedynczych boosterów, przez Elite Trainer Boxy, aż po rzadkie wydania kolekcjonerskie. Dbamy o bezpieczną wysyłkę i pewne źródło, aby każda otwarta paczka przynosiła mnóstwo radości!</p>
+                <p><strong>TCG Zone</strong> to sklep stworzony przez kolekcjonerów dla kolekcjonerów. Oferujemy wyłącznie w 100% oryginalne, fabrycznie zafoliowane produkty Pokémon TCG. Gwarantujemy pewne źródło, bezpieczeństwo oraz szybką wysyłkę!</p>
             </div>
         </div>
     </div>
@@ -285,9 +255,31 @@
         <button class="back-btn" onclick="pokazSklep()">← Powrót do katalogu</button>
     </div>
 
-    <!-- 4. KOSZYK I PŁATNOŚCI -->
+    <!-- 4. EKRAN LOGOWANIA / REJESTRACJI -->
+    <div id="auth-screen">
+        <div class="custom-box">
+            <h2 id="auth-title" style="color: #1a1a2e; margin-top: 0;">Zaloguj się do sklepu 🔑</h2>
+            <div class="form-group">
+                <label for="auth-username">Nazwa użytkownika:</label>
+                <input type="text" id="auth-username" placeholder="Wpisz swój login...">
+            </div>
+            <div class="form-group">
+                <label for="auth-password">Hasło:</label>
+                <input type="password" id="auth-password" placeholder="Wpisz hasło...">
+            </div>
+            
+            <button class="btn-primary" style="width: 100%; border-radius: 8px;" onclick="obsluzLogowanie()">Zaloguj się</button>
+            
+            <p style="text-align: center; margin-top: 20px;">
+                Nie masz jeszcze konta? <a href="#" onclick="przelaczTrybRejestracji(); return false;">Zarejestruj się tutaj</a>
+            </p>
+        </div>
+        <button class="back-btn" onclick="pokazSklep()">← Powrót do sklepu</button>
+    </div>
+
+    <!-- 5. KOSZYK I PŁATNOŚCI -->
     <div id="cart-screen">
-        <div class="cart-box">
+        <div class="custom-box">
             <h2 style="color: #1a1a2e; margin-top: 0;">Twój Koszyk 🛒</h2>
             <div id="cart-items-list"><p>Twój koszyk jest pusty.</p></div>
             
@@ -305,13 +297,59 @@
         <button class="back-btn" onclick="pokazSklep()">← Kontynuuj zakupy</button>
     </div>
 
+    <!-- 6. PANEL ADMINISTRATORA / PRACOWNIKA (UKRYTY) -->
+    <div id="admin-screen">
+        <div class="custom-box" style="border-color: #1a1a2e;">
+            <h2 style="color: #1a1a2e; margin-top: 0;">Panel Zarządzania Firmą ⚙️</h2>
+            <p style="color: #666;">Zalogowano jako: <strong id="admin-user-display">Admin</strong></p>
+
+            <h3 style="margin-top: 25px;">Dodaj nowy produkt:</h3>
+            <div class="form-group">
+                <input type="text" id="admin-name" placeholder="Nazwa przedmiotu">
+            </div>
+            <div class="form-group">
+                <input type="number" id="admin-price" placeholder="Cena w zł">
+            </div>
+            <div class="form-group">
+                <input type="number" id="admin-stock" placeholder="Stan magazynowy (szt.)">
+            </div>
+            <div class="form-group">
+                <input type="text" id="admin-image" placeholder="Link do zdjęcia (URL)">
+            </div>
+            <div class="form-group">
+                <textarea id="admin-desc" placeholder="Opis produktu..."></textarea>
+            </div>
+            <button class="btn-primary" style="width: 100%; border-radius: 8px; background-color: #2e7d32; color: #fff;" onclick="dodajNowyProduktAdmin()">+ Dodaj produkt do sklepu</button>
+
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #ccc;">
+
+            <div id="admin-users-management-section">
+                <h3>Zarządzaj Użytkownikami i Uprawnieniami:</h3>
+                <div id="admin-users-list"></div>
+                <hr style="margin: 30px 0; border: none; border-top: 1px solid #ccc;">
+            </div>
+
+            <h3>Usuń produkty z oferty:</h3>
+            <div id="admin-products-list"></div>
+        </div>
+        <button class="back-btn" onclick="pokazSklep()">← Wyjdź z panelu</button>
+    </div>
+
     <footer>
         <p>&copy; 2026 TCG Zone. Wszelkie prawa zastrzeżone.</p>
     </footer>
 
     <script>
-        // BAZA PRODUKTÓW (Możesz tu swobodnie zmieniać opisy, ceny i stan magazynowy)
-        const produkty = [
+        // Baza użytkowników (Domyślne konto Admina)
+        let uzytkownicy = [
+            { username: "admin", password: "admin123", role: "admin" }
+        ];
+        
+        let zalogowanyUzytkownik = null;
+        let trybRejestracji = false;
+
+        // BAZA PRODUKTÓW
+        let produkty = [
             {
                 id: 1,
                 nazwa: "Elite Trainer Box 30th Anniversary",
@@ -349,6 +387,190 @@
         let koszyk = [];
         let wyblanyProdukt = null;
 
+        // Logika Kont i Logowania
+        function otworzEkranKonta() {
+            if (zalogowanyUzytkownik) {
+                if (zalogowanyUzytkownik.role === "admin" || zalogowanyUzytkownik.role === "worker") {
+                    pokazPanelAdmina();
+                } else {
+                    if (confirm(`Zalogowano jako: ${zalogowanyUzytkownik.username}. Czy chcesz się wylogować?`)) {
+                        wyloguj();
+                    }
+                }
+            } else {
+                ukryjEkrany();
+                document.getElementById('auth-screen').style.display = 'block';
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function przelaczTrybRejestracji() {
+            trybRejestracji = !trybRejestracji;
+            const title = document.getElementById('auth-title');
+            if (trybRejestracji) {
+                title.innerText = "Załóż nowe konto 📝";
+            } else {
+                title.innerText = "Zaloguj się do sklepu 🔑";
+            }
+        }
+
+        function obsluzLogowanie() {
+            const userIn = document.getElementById('auth-username').value.trim();
+            const passIn = document.getElementById('auth-password').value.trim();
+
+            if (!userIn || !passIn) {
+                alert("Wpisz login oraz hasło!");
+                return;
+            }
+
+            if (trybRejestracji) {
+                const istnieje = uzytkownicy.find(u => u.username.toLowerCase() === userIn.toLowerCase());
+                if (istnieje) {
+                    alert("Taki użytkownik już istnieje!");
+                    return;
+                }
+                const nowyUzytkownik = { username: userIn, password: passIn, role: "user" };
+                uzytkownicy.push(nowyUzytkownik);
+                zalogowanyUzytkownik = nowyUzytkownik;
+                alert("Konto zostało pomyślnie utworzone!");
+            } else {
+                const uzytkownik = uzytkownicy.find(u => u.username.toLowerCase() === userIn.toLowerCase() && u.password === passIn);
+                if (!uzytkownik) {
+                    alert("Nieprawidłowy login lub hasło!");
+                    return;
+                }
+                zalogowanyUzytkownik = uzytkownik;
+                alert(`Witaj ponownie, ${zalogowanyUzytkownik.username}!`);
+            }
+
+            aktualizujPrzyciskKonta();
+            document.getElementById('auth-username').value = '';
+            document.getElementById('auth-password').value = '';
+            pokazSklep();
+        }
+
+        function wyloguj() {
+            zalogowanyUzytkownik = null;
+            aktualizujPrzyciskKonta();
+            pokazSklep();
+        }
+
+        function aktualizujPrzyciskKonta() {
+            const btn = document.getElementById('user-menu-btn');
+            if (zalogowanyUzytkownik) {
+                if (zalogowanyUzytkownik.role === "admin" || zalogowanyUzytkownik.role === "worker") {
+                    btn.innerText = `⚙️ ${zalogowanyUzytkownik.username} (Panel)`;
+                } else {
+                    btn.innerText = `👤 ${zalogowanyUzytkownik.username}`;
+                }
+            } else {
+                btn.innerText = `👤 Zaloguj się`;
+            }
+        }
+
+        // Panel Admina i Pracowników
+        function pokazPanelAdmina() {
+            ukryjEkrany();
+            document.getElementById('admin-screen').style.display = 'block';
+            document.getElementById('admin-user-display').innerText = `${zalogowanyUzytkownik.username} (${zalogowanyUzytkownik.role})`;
+            
+            const usersSection = document.getElementById('admin-users-management-section');
+            if (zalogowanyUzytkownik.role === "admin") {
+                usersSection.style.display = "block";
+                renderujAdminListaUzytkownikow();
+            } else {
+                usersSection.style.display = "none";
+            }
+
+            renderujAdminListaProduktow();
+            window.scrollTo(0, 0);
+        }
+
+        function renderujAdminListaUzytkownikow() {
+            const container = document.getElementById('admin-users-list');
+            container.innerHTML = '';
+            uzytkownicy.forEach(u => {
+                if (u.username === zalogowanyUzytkownik.username) return;
+
+                const div = document.createElement('div');
+                div.className = 'user-item-row';
+                div.innerHTML = `
+                    <div>
+                        <strong>${u.username}</strong> — Rola: <span style="color: #0288d1; font-weight: bold;">${u.role}</span>
+                    </div>
+                    <div>
+                        ${u.role === 'user' ? `<button class="btn-grant" onclick="zmienRole('${u.username}', 'worker')">Mianuj Pracownikiem</button>` : `<button class="btn-grant" onclick="zmienRole('${u.username}', 'user')">Zabierz Uprawnienia</button>`}
+                        <button class="btn-delete" onclick="usunUzytkownika('${u.username}')">Usuń konto</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function zmienRole(username, nowaRola) {
+            const u = uzytkownicy.find(usr => usr.username === username);
+            if (u) {
+                u.role = nowaRola;
+                renderujAdminListaUzytkownikow();
+            }
+        }
+
+        function usunUzytkownika(username) {
+            if (confirm(`Czy na pewno chcesz usunąć użytkownika ${username}?`)) {
+                uzytkownicy = uzytkownicy.filter(u => u.username !== username);
+                renderujAdminListaUzytkownikow();
+            }
+        }
+
+        function dodajNowyProduktAdmin() {
+            const nazwa = document.getElementById('admin-name').value.trim();
+            const cena = parseFloat(document.getElementById('admin-price').value);
+            const magazyn = parseInt(document.getElementById('admin-stock').value);
+            const zdjęcie = document.getElementById('admin-image').value.trim() || 'https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=600&q=80';
+            const opis = document.getElementById('admin-desc').value.trim();
+
+            if (!nazwa || isNaN(cena) || isNaN(magazyn) || !opis) {
+                alert("Wypełnij poprawnie wszystkie pola!");
+                return;
+            }
+
+            const nowyId = produkty.length > 0 ? Math.max(...produkty.map(p => p.id)) + 1 : 1;
+            produkty.push({ id: nowyId, nazwa, cena, magazyn, zdjęcie, opis });
+
+            document.getElementById('admin-name').value = '';
+            document.getElementById('admin-price').value = '';
+            document.getElementById('admin-stock').value = '';
+            document.getElementById('admin-image').value = '';
+            document.getElementById('admin-desc').value = '';
+
+            alert("Pomyślnie dodano nowy produkt!");
+            renderujAdminListaProduktow();
+        }
+
+        function usunProdukt(id) {
+            if (confirm("Czy na pewno chcesz usunąć ten produkt ze sklepu?")) {
+                produkty = produkty.filter(p => p.id !== id);
+                renderujAdminListaProduktow();
+            }
+        }
+
+        function renderujAdminListaProduktow() {
+            const container = document.getElementById('admin-products-list');
+            container.innerHTML = '';
+            produkty.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'user-item-row';
+                div.innerHTML = `
+                    <div>
+                        <strong>${p.nazwa}</strong> — ${p.cena.toFixed(2)} zł (Stan: ${p.magazyn} szt.)
+                    </div>
+                    <button class="btn-delete" onclick="usunProdukt(${p.id})">Usuń produkt</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Nawigacja
         function pokazStart() {
             ukryjEkrany();
             document.getElementById('home-screen').style.display = 'block';
@@ -363,6 +585,11 @@
         }
 
         function pokazKoszyk() {
+            if (!zalogowanyUzytkownik) {
+                alert("Musisz się zalogować, aby przejść do koszyka i dokonać zakupu!");
+                otworzEkranKonta();
+                return;
+            }
             ukryjEkrany();
             document.getElementById('cart-screen').style.display = 'block';
             window.scrollTo(0, 0);
@@ -373,7 +600,9 @@
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('shop-screen').style.display = 'none';
             document.getElementById('detail-screen').style.display = 'none';
+            document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('cart-screen').style.display = 'none';
+            document.getElementById('admin-screen').style.display = 'none';
         }
 
         function renderujProdukty() {
@@ -442,6 +671,12 @@
         }
 
         function dodajDoKoszyka() {
+            if (!zalogowanyUzytkownik) {
+                alert("Musisz być zalogowany, aby dodać przedmioty do koszyka!");
+                otworzEkranKonta();
+                return;
+            }
+
             const ilosc = parseInt(document.getElementById('quantity-input').value) || 1;
             
             if (wyblanyProdukt.magazyn < ilosc) {
@@ -507,7 +742,6 @@
         }
 
         function finalizujZakup(metoda) {
-            // Automatyczne pomniejszanie stanu magazynowego
             koszyk.forEach(itemKoszyka => {
                 const p = produkty.find(prod => prod.id === itemKoszyka.id);
                 if (p) {
@@ -516,7 +750,7 @@
                 }
             });
 
-            alert(`Dziękujemy za zamówienie! Wybrano metodę płatności: ${metoda}. Stan magazynowy został zaktualizowany!`);
+            alert(`Dziękujemy za zamówienie, ${zalogowanyUzytkownik.username}! Wybrano metodę płatności: ${metoda}. Stan magazynowy został zaktualizowany!`);
             koszyk = [];
             aktualizujLicznik();
             pokazSklep();
