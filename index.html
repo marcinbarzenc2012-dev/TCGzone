@@ -276,7 +276,6 @@
 
         .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; padding: 15px 0; }
         
-        /* Styl sekcji podsumowania koszyka */
         .cart-summary-box {
             text-align: right;
             margin-top: 25px;
@@ -583,8 +582,8 @@
         let koszyk = [];
         let wyblanyProdukt = null;
 
-        // Stały koszt wysyłki (zmieniaj tę wartość, np. 15.00 dla płatnej wysyłki lub 0 dla darmowej)
-        const kosztWysylki = 0.00;
+        // Stały koszt wysyłki (możesz zmienić np. na 15.00, jeśli chcesz płatną wysyłkę)
+        let kosztWysylki = 0.00;
 
         aktualizujWidokKonta();
         aktualizujLicznik();
@@ -1082,7 +1081,7 @@
             let sumaProdukty = 0;
 
             koszyk.forEach(item => {
-                const iloscKwota = item.cena * item.ilosc;
+                const iloscKwota = Number(item.cena) * Number(item.ilosc);
                 sumaProdukty += iloscKwota;
 
                 const row = document.createElement('div');
@@ -1090,7 +1089,7 @@
                 row.innerHTML = `
                     <div>
                         <strong style="color: #1a1a2e; font-size: 1.1em;">${item.nazwa}</strong><br>
-                        <small style="color: #666;">Ilość: ${item.ilosc} szt. × ${item.cena.toFixed(2)} zł</small>
+                        <small style="color: #666;">Ilość: ${item.ilosc} szt. × ${Number(item.cena).toFixed(2)} zł</small>
                     </div>
                     <div style="font-weight: bold; color: #2e7d32; font-size: 1.2em;">${iloscKwota.toFixed(2)} zł</div>
                 `;
