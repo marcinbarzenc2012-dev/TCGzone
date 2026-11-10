@@ -16,39 +16,77 @@
             scroll-behavior: smooth;
         }
 
-        /* Górny pasek nawigacyjny */
-        .top-bar {
+        /* Przyciski w lewym górnym rogu */
+        .auth-top-left {
             position: fixed;
             top: 20px;
-            right: 20px;
+            left: 20px;
             display: flex;
-            gap: 12px;
+            flex-direction: column;
+            gap: 8px;
             z-index: 1000;
         }
 
-        .nav-btn {
+        .btn-login-white {
+            background: #ffffff;
+            color: #1a1a2e;
+            border: 2px solid #ccc;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95em;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .btn-login-white:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.03);
+        }
+
+        .btn-register-blue {
+            background: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95em;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0,123,255,0.3);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .btn-register-blue:hover {
+            background-color: #0056b3;
+            transform: scale(1.03);
+        }
+
+        /* Przyciski w prawym górnym rogu (Koszyk) */
+        .cart-top-right {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .floating-cart {
             background: #ffcb05;
             color: #000;
             padding: 10px 18px;
             border-radius: 10px;
             font-weight: bold;
-            font-size: 1em;
+            font-size: 1.05em;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             transition: transform 0.2s, background-color 0.2s;
-            border: 2px solid #e0b000;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            border: 2px solid #e0b000;
         }
-        .nav-btn:hover {
+        .floating-cart:hover {
             transform: scale(1.05);
             background-color: #f0be00;
-        }
-        .user-btn {
-            background: #ffffff;
-            color: #1a1a2e;
-            border: 2px solid #ffcb05;
         }
 
         /* Strona Główna (Startowa) */
@@ -177,7 +215,7 @@
         }
         .btn-add-cart:hover { background-color: #e6b800; }
 
-        /* Modale / Logowanie */
+        /* Okna Logowania, Koszyka i Admina */
         #auth-screen, #cart-screen, #admin-screen { 
             display: none; 
             max-width: 750px; 
@@ -194,7 +232,7 @@
         }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
-        .form-group input, .form-group textarea, .form-group select {
+        .form-group input, .form-group textarea {
             width: 100%;
             padding: 12px;
             border-radius: 8px;
@@ -219,10 +257,17 @@
 </head>
 <body>
 
-    <!-- Górny Pasek Nawigacyjny -->
-    <div class="top-bar">
-        <div class="nav-btn user-btn" id="user-menu-btn" onclick="otworzEkranKonta()">👤 Zaloguj się</div>
-        <div class="nav-btn" onclick="pokazKoszyk()">🛒 Koszyk (<span id="cart-count">0</span>)</div>
+    <!-- Lewy górny róg: Zaloguj się (biały) i Zarejestruj się (niebieski) -->
+    <div class="auth-top-left" id="auth-buttons-container">
+        <button class="btn-login-white" id="btn-login-main" onclick="otworzLogowanie()">Zaloguj się</button>
+        <button class="btn-register-blue" id="btn-register-main" onclick="otworzRejestracje()">Zarejestruj się</button>
+    </div>
+
+    <!-- Prawy górny róg: Koszyk -->
+    <div class="cart-top-right">
+        <div class="floating-cart" onclick="pokazKoszyk()">
+            🛒 Koszyk (<span id="cart-count">0</span>)
+        </div>
     </div>
 
     <!-- 1. STRONA GŁÓWNA -->
@@ -268,11 +313,7 @@
                 <input type="password" id="auth-password" placeholder="Wpisz hasło...">
             </div>
             
-            <button class="btn-primary" style="width: 100%; border-radius: 8px;" onclick="obsluzLogowanie()">Zaloguj się</button>
-            
-            <p style="text-align: center; margin-top: 20px;">
-                Nie masz jeszcze konta? <a href="#" onclick="przelaczTrybRejestracji(); return false;">Zarejestruj się tutaj</a>
-            </p>
+            <button class="btn-primary" id="auth-submit-btn" style="width: 100%; border-radius: 8px;" onclick="obsluzFormularzAuth()">Zaloguj się</button>
         </div>
         <button class="back-btn" onclick="pokazSklep()">← Powrót do sklepu</button>
     </div>
@@ -297,7 +338,7 @@
         <button class="back-btn" onclick="pokazSklep()">← Kontynuuj zakupy</button>
     </div>
 
-    <!-- 6. PANEL ADMINISTRATORA / PRACOWNIKA (UKRYTY) -->
+    <!-- 6. PANEL ADMINISTRATORA / PRACOWNIKA -->
     <div id="admin-screen">
         <div class="custom-box" style="border-color: #1a1a2e;">
             <h2 style="color: #1a1a2e; margin-top: 0;">Panel Zarządzania Firmą ⚙️</h2>
@@ -340,7 +381,7 @@
     </footer>
 
     <script>
-        // Baza użytkowników (Domyślne konto Admina)
+        // Baza użytkowników
         let uzytkownicy = [
             { username: "admin", password: "admin123", role: "admin" }
         ];
@@ -387,34 +428,26 @@
         let koszyk = [];
         let wyblanyProdukt = null;
 
-        // Logika Kont i Logowania
-        function otworzEkranKonta() {
-            if (zalogowanyUzytkownik) {
-                if (zalogowanyUzytkownik.role === "admin" || zalogowanyUzytkownik.role === "worker") {
-                    pokazPanelAdmina();
-                } else {
-                    if (confirm(`Zalogowano jako: ${zalogowanyUzytkownik.username}. Czy chcesz się wylogować?`)) {
-                        wyloguj();
-                    }
-                }
-            } else {
-                ukryjEkrany();
-                document.getElementById('auth-screen').style.display = 'block';
-                window.scrollTo(0, 0);
-            }
+        // Otwieranie widoków logowania / rejestracji
+        function otworzLogowanie() {
+            trybRejestracji = false;
+            document.getElementById('auth-title').innerText = "Zaloguj się do sklepu 🔑";
+            document.getElementById('auth-submit-btn').innerText = "Zaloguj się";
+            ukryjEkrany();
+            document.getElementById('auth-screen').style.display = 'block';
+            window.scrollTo(0, 0);
         }
 
-        function przelaczTrybRejestracji() {
-            trybRejestracji = !trybRejestracji;
-            const title = document.getElementById('auth-title');
-            if (trybRejestracji) {
-                title.innerText = "Załóż nowe konto 📝";
-            } else {
-                title.innerText = "Zaloguj się do sklepu 🔑";
-            }
+        function otworzRejestracje() {
+            trybRejestracji = true;
+            document.getElementById('auth-title').innerText = "Załóż nowe konto 📝";
+            document.getElementById('auth-submit-btn').innerText = "Załóż konto";
+            ukryjEkrany();
+            document.getElementById('auth-screen').style.display = 'block';
+            window.scrollTo(0, 0);
         }
 
-        function obsluzLogowanie() {
+        function obsluzFormularzAuth() {
             const userIn = document.getElementById('auth-username').value.trim();
             const passIn = document.getElementById('auth-password').value.trim();
 
@@ -443,28 +476,42 @@
                 alert(`Witaj ponownie, ${zalogowanyUzytkownik.username}!`);
             }
 
-            aktualizujPrzyciskKonta();
+            aktualizujWidokKonta();
             document.getElementById('auth-username').value = '';
             document.getElementById('auth-password').value = '';
-            pokazSklep();
+            
+            if (zalogowanyUzytkownik.role === "admin" || zalogowanyUzytkownik.role === "worker") {
+                pokazPanelAdmina();
+            } else {
+                pokazSklep();
+            }
         }
 
         function wyloguj() {
             zalogowanyUzytkownik = null;
-            aktualizujPrzyciskKonta();
+            aktualizujWidokKonta();
             pokazSklep();
         }
 
-        function aktualizujPrzyciskKonta() {
-            const btn = document.getElementById('user-menu-btn');
+        function aktualizujWidokKonta() {
+            const container = document.getElementById('auth-buttons-container');
             if (zalogowanyUzytkownik) {
                 if (zalogowanyUzytkownik.role === "admin" || zalogowanyUzytkownik.role === "worker") {
-                    btn.innerText = `⚙️ ${zalogowanyUzytkownik.username} (Panel)`;
+                    container.innerHTML = `
+                        <button class="btn-login-white" onclick="pokazPanelAdmina()">⚙️ Panel (${zalogowanyUzytkownik.username})</button>
+                        <button class="btn-register-blue" onclick="wyloguj()">Wyloguj się</button>
+                    `;
                 } else {
-                    btn.innerText = `👤 ${zalogowanyUzytkownik.username}`;
+                    container.innerHTML = `
+                        <button class="btn-login-white" style="cursor: default;">👤 ${zalogowanyUzytkownik.username}</button>
+                        <button class="btn-register-blue" onclick="wyloguj()">Wyloguj się</button>
+                    `;
                 }
             } else {
-                btn.innerText = `👤 Zaloguj się`;
+                container.innerHTML = `
+                    <button class="btn-login-white" id="btn-login-main" onclick="otworzLogowanie()">Zaloguj się</button>
+                    <button class="btn-register-blue" id="btn-register-main" onclick="otworzRejestracje()">Zarejestruj się</button>
+                `;
             }
         }
 
@@ -587,7 +634,7 @@
         function pokazKoszyk() {
             if (!zalogowanyUzytkownik) {
                 alert("Musisz się zalogować, aby przejść do koszyka i dokonać zakupu!");
-                otworzEkranKonta();
+                otworzLogowanie();
                 return;
             }
             ukryjEkrany();
@@ -673,7 +720,7 @@
         function dodajDoKoszyka() {
             if (!zalogowanyUzytkownik) {
                 alert("Musisz być zalogowany, aby dodać przedmioty do koszyka!");
-                otworzEkranKonta();
+                otworzLogowanie();
                 return;
             }
 
