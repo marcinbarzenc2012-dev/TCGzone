@@ -105,16 +105,17 @@
         .search-hero h1 { color: #ffcb05; font-size: 3.8em; margin: 0 0 10px 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.9); }
         .search-hero p { color: #00ffcc; font-size: 1.3em; font-weight: bold; margin-bottom: 35px; }
         
-        .search-bar-container {
-            max-width: 650px;
+        .search-bar-wrapper-main {
+            max-width: 700px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             background: #ffffff;
             border-radius: 40px;
-            padding: 6px 12px 6px 25px;
+            padding: 6px 12px 6px 20px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
             border: 3px solid #ffcb05;
+            gap: 10px;
         }
         .search-input {
             flex-grow: 1;
@@ -124,19 +125,31 @@
             padding: 10px 5px;
             color: #1a1a2e;
         }
+        .quick-sort-select {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #333;
+            outline: none;
+            cursor: pointer;
+        }
         .search-btn {
             background: #ffcb05;
             border: none;
             color: #000;
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.4em;
+            font-size: 1.3em;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: transform 0.2s, background-color 0.2s;
+            flex-shrink: 0;
         }
         .search-btn:hover {
             background-color: #e6b800;
@@ -170,7 +183,7 @@
         .contact-item-group a { color: #0288d1; text-decoration: none; font-weight: bold; display: block; font-size: 0.95em; }
         .contact-item-group a:hover { text-decoration: underline; }
 
-        /* Panele wyników wyszukiwania, ulubionych i sklepu */
+        /* Panel wyników */
         #shop-screen, #favorites-screen {
             display: none;
             max-width: 1200px;
@@ -178,7 +191,6 @@
             padding: 0 20px;
         }
 
-        /* Stały nagłówek wyszukiwania w panelu sklepu */
         .shop-top-search-bar {
             background: #1a1a2e;
             padding: 25px 20px;
@@ -192,56 +204,119 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
         }
 
-        /* Pasek filtrów, sortowania i suwaka dwukropeczkowego */
-        .filter-sort-bar {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
+        /* Przycisk otwierający okienko sortowania */
+        .open-modal-btn {
+            background: #ffcb05;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .open-modal-btn:hover {
+            background: #e6b800;
+            transform: scale(1.03);
+        }
+
+        /* Modal (Wyskakujące okienko sortowania i suwaka) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
         }
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+        .modal-content {
+            background: #ffffff;
+            border: 3px solid #ffcb05;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: left;
+            position: relative;
         }
-        .filter-group label {
+        .modal-content h3 {
+            margin-top: 0;
+            color: #1a1a2e;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #e0e0e0;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        .modal-close-btn:hover { background: #d0d0d0; }
+
+        .modal-section {
+            margin-bottom: 25px;
+        }
+        .modal-section label {
+            display: block;
             font-weight: bold;
             color: #1a1a2e;
+            margin-bottom: 8px;
         }
-        .filter-group select {
-            padding: 8px 12px;
+        .modal-section select {
+            width: 100%;
+            padding: 10px;
             border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 1em;
             outline: none;
         }
 
-        /* Stylowanie podwójnego suwaka cenowego z dwoma kropeczkami */
+        /* Ulepszony suwak cenowy z idealnie dopasowaną linią i kółeczkami */
         .price-range-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 280px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
         }
         .price-range-labels {
             display: flex;
             justify-content: space-between;
-            font-size: 0.9em;
+            font-size: 0.95em;
             font-weight: bold;
             color: #2e7d32;
+            margin-bottom: 12px;
         }
         .double-slider-container {
             position: relative;
-            height: 35px;
+            height: 30px;
             display: flex;
             align-items: center;
+        }
+        .slider-track {
+            position: absolute;
+            width: 100%;
+            height: 8px;
+            background: #d0d0d0;
+            border-radius: 4px;
+            z-index: 1;
         }
         .double-slider-container input[type="range"] {
             position: absolute;
@@ -251,36 +326,32 @@
             -webkit-appearance: none;
             appearance: none;
             margin: 0;
+            z-index: 2;
         }
         .double-slider-container input[type="range"]::-webkit-slider-thumb {
-            height: 20px;
-            width: 20px;
+            height: 24px;
+            width: 24px;
             border-radius: 50%;
             background: #ffcb05;
-            border: 2px solid #d4a500;
+            border: 3px solid #d4a500;
             pointer-events: auto;
             cursor: pointer;
-            -webkit-appearance: appearance;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            -webkit-appearance: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+        .double-slider-container input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
         }
         .double-slider-container input[type="range"]::-moz-range-thumb {
-            height: 20px;
-            width: 20px;
+            height: 24px;
+            width: 24px;
             border-radius: 50%;
             background: #ffcb05;
-            border: 2px solid #d4a500;
+            border: 3px solid #d4a500;
             pointer-events: auto;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        /* Pasek pod spodem suwaka */
-        .slider-track {
-            position: absolute;
-            width: 100%;
-            height: 6px;
-            background: #ddd;
-            border-radius: 3px;
-            z-index: 1;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
 
         .shop-grid { 
@@ -567,8 +638,15 @@
             <h1>TCG Zone</h1>
             <p>Wyszukaj interesujące Cię karty lub zestawy Pokémon TCG:</p>
             
-            <div class="search-bar-container">
+            <div class="search-bar-wrapper-main">
                 <input type="text" id="search-input" class="search-input" placeholder="Wpisz nazwę (np. booster bundle, ETB)..." onkeypress="obsluzEnterSzukania(event, 'home')">
+                <select id="quick-sort-home" class="quick-sort-select" title="Szybkie sortowanie">
+                    <option value="default">Sortuj</option>
+                    <option value="price-asc">Cena: od najniższej</option>
+                    <option value="price-desc">Cena: od najwyższej</option>
+                    <option value="popularity">Popularność</option>
+                    <option value="newest">Najnowsze</option>
+                </select>
                 <button class="search-btn" onclick="wykonajWyszukiwanie('home')" title="Szukaj">🔍</button>
             </div>
         </div>
@@ -596,13 +674,20 @@
 
     <!-- 2. PANEL WYNIKÓW WYSZUKIWANIA / KATALOGU -->
     <div id="shop-screen">
-        <!-- Stała wyszukiwarka na górze wyników z przyciskiem Powrót -->
         <div class="shop-top-search-bar">
             <button class="back-btn" onclick="pokazStart()">← Wróć</button>
-            <div class="search-bar-container" style="max-width: 500px; flex-grow: 1; margin: 0 15px;">
-                <input type="text" id="search-input-shop" class="search-input" placeholder="Wpisz, aby szukać dalej..." onkeypress="obsluzEnterSzukania(event, 'shop')">
+            <div class="search-bar-wrapper-main" style="max-width: 500px; flex-grow: 1; margin: 0 10px; background: #fff;">
+                <input type="text" id="search-input-shop" class="search-input" placeholder="Szukaj dalej..." onkeypress="obsluzEnterSzukania(event, 'shop')">
+                <select id="quick-sort-shop" class="quick-sort-select" title="Szybkie sortowanie">
+                    <option value="default">Sortuj</option>
+                    <option value="price-asc">Cena: od najniższej</option>
+                    <option value="price-desc">Cena: od najwyższej</option>
+                    <option value="popularity">Popularność</option>
+                    <option value="newest">Najnowsze</option>
+                </select>
                 <button class="search-btn" onclick="wykonajWyszukiwanie('shop')" title="Szukaj" style="width: 42px; height: 42px; font-size: 1.1em;">🔍</button>
             </div>
+            <button class="open-modal-btn" onclick="otworzModalSortowania()">⚙️ Sortuj i Filtruj</button>
         </div>
 
         <div style="margin-bottom: 20px;">
@@ -610,11 +695,18 @@
             <p id="shop-results-subtitle" style="color: #666; margin: 0;">Produkty dopasowane do Twojego zapytania.</p>
         </div>
 
-        <!-- Pasek sortowania i suwaka cenowego -->
-        <div class="filter-sort-bar">
-            <div class="filter-group">
-                <label>🔄 Sortuj:</label>
-                <select id="sort-select" onchange="zastosujFiltryISortowanie()">
+        <div class="shop-grid" id="product-list"></div>
+    </div>
+
+    <!-- OKIENKO MODAL (ROZWIJANE MENU SORTOWANIA I SUWAKA CENOWEGO) -->
+    <div class="modal-overlay" id="sort-filter-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="zamknijModalSortowania()">✕</button>
+            <h3>Sortowanie i filtry</h3>
+
+            <div class="modal-section">
+                <label for="modal-sort-select">Sortuj według:</label>
+                <select id="modal-sort-select" onchange="zmienSortowanieWModal()">
                     <option value="default">Domyślnie</option>
                     <option value="price-asc">Cena: od najniższej</option>
                     <option value="price-desc">Cena: od najwyższej</option>
@@ -622,9 +714,9 @@
                     <option value="newest">Najnowsze</option>
                 </select>
             </div>
-            
-            <!-- Suwak dwukropeczkowy do ceny -->
-            <div class="filter-group">
+
+            <div class="modal-section">
+                <label>Zakres ceny:</label>
                 <div class="price-range-wrapper">
                     <div class="price-range-labels">
                         <span>Od: <strong id="price-min-val">0</strong> zł</span>
@@ -637,9 +729,9 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="shop-grid" id="product-list"></div>
+            <button class="btn-primary" style="width: 100%; border-radius: 8px; margin-top: 10px; background-color: #ffcb05; color: #000; font-weight: bold; border: none; padding: 12px;" onclick="zamknijModalSortowania()">Zastosuj</button>
+        </div>
     </div>
 
     <!-- 3. PANEL ULUBIONYCH -->
@@ -724,7 +816,6 @@
 
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #ccc;">
 
-            <!-- ZAKŁADKA 0: Ustawienia Sklepu (Maksymalna cena suwaka) -->
             <div class="admin-section-box" style="border-color: #ffcb05;">
                 <h3 style="color: #1a1a2e; margin-top: 0;">🎛️ Ustawienia Maksymalnej Ceny w Wyszukiwarce</h3>
                 <div class="form-group">
@@ -734,7 +825,6 @@
                 <button class="btn-primary" style="width: 100%; border-radius: 8px; font-size: 1.05em; background-color: #ffcb05; color: #000; font-weight: bold;" onclick="zapiszLimitCenySuwaka()">💾 Zapisz limit suwaka</button>
             </div>
 
-            <!-- ZAKŁADKA 1: Zarządzanie Kontaktem -->
             <div class="admin-section-box" style="border-color: #2e7d32;">
                 <h3 style="color: #2e7d32; margin-top: 0;">📞 Zakładka Kontakt (Telefony i E-maile)</h3>
                 <div class="form-group">
@@ -748,7 +838,6 @@
                 <button class="btn-primary" style="width: 100%; border-radius: 8px; font-size: 1.05em; background-color: #2e7d32; color: #fff;" onclick="zapiszDaneKontaktowe()">💾 Zapisz dane kontaktowe</button>
             </div>
 
-            <!-- ZAKŁADKA 2: Zarządzanie Wysyłką -->
             <div class="admin-section-box" style="border-color: #0288d1;">
                 <h3 style="color: #0288d1; margin-top: 0;">🚚 Zakładka Dostawa (Koszt i próg darmowej wysyłki)</h3>
                 <div class="form-group">
@@ -900,21 +989,47 @@
             }
         }
 
-        /* WYSZUKIWANIE (Z obu miejsc: ze strony głównej oraz ze stałego paska na górze wyników) */
+        /* STEROWANIE MODALEM SORTOWANIA */
+        function otworzModalSortowania() {
+            document.getElementById('sort-filter-modal').style.display = 'flex';
+        }
+        function zamknijModalSortowania() {
+            document.getElementById('sort-filter-modal').style.display = 'none';
+        }
+
+        function zmienSortowanieWModal() {
+            const val = document.getElementById('modal-sort-select').value;
+            // Synchronizuj oba selecty szybkiego sortowania
+            document.getElementById('quick-sort-home').value = val;
+            document.getElementById('quick-sort-shop').value = val;
+            zastosujFiltryISortowanie();
+        }
+
+        function synchronizujSelectySortowania(wybranaWartosc) {
+            document.getElementById('quick-sort-home').value = wybranaWartosc;
+            document.getElementById('quick-sort-shop').value = wybranaWartosc;
+            document.getElementById('modal-sort-select').value = wybranaWartosc;
+        }
+
+        /* WYSZUKIWANIE */
         function wykonajWyszukiwanie(zrodlo) {
             let fraza = "";
+            let wybraneSortowanie = "default";
+
             if (zrodlo === 'home') {
                 fraza = document.getElementById('search-input').value.trim().toLowerCase();
+                wybraneSortowanie = document.getElementById('quick-sort-home').value;
             } else {
                 fraza = document.getElementById('search-input-shop').value.trim().toLowerCase();
+                wybraneSortowanie = document.getElementById('quick-sort-shop').value;
             }
 
             aktualnaFrazaSzukania = fraza;
+            synchronizujSelectySortowania(wybraneSortowanie);
             
             ukryjEkrany();
             document.getElementById('shop-screen').style.display = 'block';
 
-            // Synchronizuj wartości w obu polach wyszukiwania
             document.getElementById('search-input').value = fraza;
             document.getElementById('search-input-shop').value = fraza;
             
@@ -925,8 +1040,6 @@
                 titleEl.innerText = `Katalog Wszystkich Produktów`;
             }
 
-            document.getElementById('sort-select').value = "default";
-            
             // Inicjalizacja suwaka z limitem z panelu admina
             const sMin = document.getElementById('slider-min');
             const sMax = document.getElementById('slider-max');
@@ -959,7 +1072,6 @@
             let valMax = parseInt(sMax.value);
 
             if (valMin > valMax) {
-                // Zapobiegaj nakładaniu się kropeczek na siebie w złej kolejności
                 let temp = valMin;
                 sMin.value = valMax;
                 sMax.value = temp;
@@ -973,11 +1085,10 @@
             zastosujFiltryISortowanie();
         }
 
-        /* FILTROWANIE I SORTOWANIE PRODUKTÓW */
+        /* FILTROWANIE I SORTOWANIE */
         function zastosujFiltryISortowanie() {
             let wynik = [...produkty];
 
-            // 1. Filtrowanie po nazwie / opisie (jeśli wpisano frazę)
             if (aktualnaFrazaSzukania) {
                 wynik = wynik.filter(p => 
                     p.nazwa.toLowerCase().includes(aktualnaFrazaSzukania) || 
@@ -985,7 +1096,6 @@
                 );
             }
 
-            // 2. Filtrowanie po cenie z dwukropeczkowego suwaka
             const minCena = parseInt(document.getElementById('slider-min').value);
             const maxCena = parseInt(document.getElementById('slider-max').value);
 
@@ -994,8 +1104,7 @@
                 return cenaAktualna >= minCena && cenaAktualna <= maxCena;
             });
 
-            // 3. Sortowanie
-            const sortVal = document.getElementById('sort-select').value;
+            const sortVal = document.getElementById('modal-sort-select').value;
             if (sortVal === 'price-asc') {
                 wynik.sort((a, b) => {
                     let ca = a.znizka > 0 && a.znizka < 100 ? a.cena * (1 - a.znizka / 100) : a.cena;
@@ -1018,7 +1127,7 @@
             renderujGridProduktow(wynik, 'product-list');
         }
 
-        /* ULUBIONE (SERDUSZKA) */
+        /* ULUBIONE */
         function przełączUlubione(event, id) {
             event.stopPropagation();
             
