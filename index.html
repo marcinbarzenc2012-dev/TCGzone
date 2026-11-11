@@ -89,38 +89,62 @@
             background-color: #f0be00;
         }
 
-        /* Strona Główna (Startowa) */
+        /* Sekcja Wyszukiwarki na stronie głównej */
         #home-screen { display: block; }
-        .hero {
-            padding: 120px 20px;
-            background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=1200&q=80');
+        .search-hero {
+            padding: 100px 20px 60px 20px;
+            background: linear-gradient(rgba(26,26,46,0.85), rgba(26,26,46,0.85)), url('https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=1200&q=80');
             background-size: cover;
             background-position: center;
             color: #ffffff;
             text-align: center;
             border-bottom: 5px solid #ffcb05;
         }
-        .hero h1 { color: #ffcb05; font-size: 3.8em; margin: 0 0 10px 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.9); }
-        .hero .subtitle { color: #00ffcc; font-size: 1.4em; font-weight: bold; margin-bottom: 35px; text-shadow: 1px 1px 5px rgba(0,0,0,0.9); }
+        .search-hero h1 { color: #ffcb05; font-size: 3.2em; margin: 0 0 10px 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.9); }
+        .search-hero p { color: #00ffcc; font-size: 1.2em; font-weight: bold; margin-bottom: 30px; }
         
-        .btn-primary {
-            background-color: #ffcb05;
-            color: #000;
+        .search-bar-container {
+            max-width: 650px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 40px;
+            padding: 6px 12px 6px 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            border: 3px solid #ffcb05;
+        }
+        .search-input {
+            flex-grow: 1;
             border: none;
-            padding: 16px 36px;
+            outline: none;
             font-size: 1.2em;
-            font-weight: bold;
-            border-radius: 30px;
+            padding: 10px 5px;
+            color: #1a1a2e;
+        }
+        .search-btn {
+            background: #ffcb05;
+            border: none;
+            color: #000;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 203, 5, 0.4);
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: transform 0.2s, background-color 0.2s;
         }
-        .btn-primary:hover { background-color: #e6b800; transform: scale(1.05); }
+        .search-btn:hover {
+            background-color: #e6b800;
+            transform: scale(1.08);
+        }
 
-        /* Pasek Kontaktowy na stronie głównej */
+        /* Pasek Kontaktowy */
         .contact-slider-wrapper {
             max-width: 900px;
-            margin: -30px auto 40px auto;
+            margin: -25px auto 30px auto;
             position: relative;
             z-index: 10;
             padding: 0 20px;
@@ -129,7 +153,7 @@
             background: #ffffff;
             border: 2px solid #ffcb05;
             border-radius: 15px;
-            padding: 25px 30px;
+            padding: 20px 30px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.12);
             display: flex;
             justify-content: space-around;
@@ -137,46 +161,24 @@
             flex-wrap: wrap;
             gap: 20px;
         }
-        .contact-item-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .contact-item-group { display: flex; align-items: center; gap: 12px; }
         .contact-item-group .icon { font-size: 1.8em; }
         .contact-item-group div { text-align: left; }
         .contact-item-group strong { display: block; color: #1a1a2e; font-size: 1.05em; }
         .contact-item-group a { color: #0288d1; text-decoration: none; font-weight: bold; display: block; font-size: 0.95em; }
         .contact-item-group a:hover { text-decoration: underline; }
 
-        .about-section {
-            max-width: 900px;
-            margin: 40px auto 80px auto;
-            padding: 0 20px;
-            text-align: center;
-        }
-        .about-box {
-            background: #f8f9fa;
-            border: 2px solid #ffcb05;
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
-        .about-box h2 { color: #1a1a2e; margin-top: 0; font-size: 2.2em; }
-        .about-box p { color: #444; line-height: 1.8; font-size: 1.15em; }
-
-        /* Katalog produktów */
-        #shop-screen {
-            display: none;
+        /* Sekcja produktów i siatka */
+        .main-products-section {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            text-align: center;
+            margin: 30px auto 60px auto;
+            padding: 0 20px;
         }
         .shop-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); 
             gap: 30px; 
-            margin-top: 30px;
+            margin-top: 25px;
         }
         .product-card { 
             border: 2px solid #e0e0e0; 
@@ -198,8 +200,31 @@
         }
         .product-img { width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid #f0f0f0; }
         .product-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .product-card h3 { color: #1a1a2e; margin: 0 0 8px 0; font-size: 1.2em; }
+        .product-card h3 { color: #1a1a2e; margin: 0 0 8px 0; font-size: 1.2em; padding-right: 35px; }
         
+        /* Przycisk Serduszka Ulubionych */
+        .favorite-heart-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+            z-index: 5;
+        }
+        .favorite-heart-btn:hover {
+            transform: scale(1.15);
+        }
+
         .price-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
         .product-card .price { font-size: 1.3em; font-weight: bold; color: #2e7d32; }
         .product-card .old-price { font-size: 1em; color: #888; text-decoration: line-through; }
@@ -230,6 +255,7 @@
             padding: 40px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.08);
             text-align: left;
+            position: relative;
         }
         .detail-img { 
             width: 100%; 
@@ -307,21 +333,9 @@
 
         .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; padding: 15px 0; }
         
-        .cart-summary-box {
-            text-align: right;
-            margin-top: 25px;
-        }
-        .cart-summary-total {
-            color: #2e7d32;
-            margin: 0;
-            font-size: 1.5em;
-        }
-        .shipping-info {
-            color: #555;
-            font-size: 1.1em;
-            margin-top: 6px;
-            font-weight: 600;
-        }
+        .cart-summary-box { text-align: right; margin-top: 25px; }
+        .cart-summary-total { color: #2e7d32; margin: 0; font-size: 1.5em; }
+        .shipping-info { color: #555; font-size: 1.1em; margin-top: 6px; font-weight: 600; }
 
         .payment-methods { margin-top: 35px; text-align: center; }
         .pay-btn { padding: 14px 25px; margin: 8px; font-size: 1.05em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: #fff; text-decoration: none; display: inline-block; }
@@ -338,7 +352,6 @@
             margin-bottom: 25px;
         }
 
-        /* Karty edycji produktów w panelu admina */
         .admin-product-edit-card {
             background: #ffffff;
             border: 1px solid #e0e0e0;
@@ -441,15 +454,20 @@
         </div>
     </div>
 
-    <!-- 1. STRONA GŁÓWNA -->
+    <!-- 1. STRONA GŁÓWNA Z WYSZUKIWARKĄ I PRODUKTAMI -->
     <div id="home-screen">
-        <div class="hero">
+        <div class="search-hero">
             <h1>TCG Zone</h1>
-            <p class="subtitle">Oficjalny sklep z zestawami i kartami Pokémon TCG</p>
-            <button class="btn-primary" onclick="pokazSklep()">Przejdź do świata Pokémon</button>
+            <p>Wpisz nazwę szukanego zestawu lub karty (np. booster bundle, ETB):</p>
+            
+            <!-- Wyszukiwarka z lupką -->
+            <div class="search-bar-container">
+                <input type="text" id="search-input" class="search-input" placeholder="Szukaj produktów w sklepie..." onkeypress="obsluzEnterSzukania(event)">
+                <button class="search-btn" onclick="wykonajWyszukiwanie()" title="Szukaj">🔍</button>
+            </div>
         </div>
 
-        <!-- Pasek Kontaktowy (telefony i e-maile na stronie głównej) -->
+        <!-- Pasek Kontaktowy -->
         <div class="contact-slider-wrapper">
             <div class="contact-slider-card">
                 <div class="contact-item-group">
@@ -469,29 +487,21 @@
             </div>
         </div>
 
-        <div class="about-section">
-            <div class="about-box">
-                <h2>O naszej firmie i pasji</h2>
-                <p><strong>TCG Zone</strong> to sklep stworzony przez kolekcjonerów dla kolekcjonerów. Oferujemy wyłącznie w 100% oryginalne, fabrycznie zafoliowane produkty Pokémon TCG. Gwarantujemy pewne źródło, bezpieczeństwo oraz szybką wysyłkę!</p>
-            </div>
+        <!-- Lista produktów -->
+        <div class="main-products-section">
+            <h2 id="search-results-title" style="color: #1a1a2e; margin-bottom: 5px;">Katalog Produktów</h2>
+            <p id="search-results-subtitle" style="color: #666; margin-top: 0;">Wszystkie dostępne zestawy Pokémon TCG w naszym sklepie.</p>
+            <div class="shop-grid" id="product-list"></div>
         </div>
     </div>
 
-    <!-- 2. KATALOG PRODUKTÓW -->
-    <div id="shop-screen">
-        <h1 style="color: #1a1a2e; font-size: 2.5em; margin-bottom: 5px;">Katalog Produktów</h1>
-        <p style="color: #666; font-size: 1.1em;">Wybierz interesujący Cię produkt, aby zobaczyć szczegóły i stan magazynowy.</p>
-        <div class="shop-grid" id="product-list"></div>
-        <button class="back-btn" onclick="pokazStart()" style="margin-top: 40px;">← Powrót do strony głównej</button>
-    </div>
-
-    <!-- 3. SZCZEGÓŁY PRODUKTU -->
+    <!-- 2. SZCZEGÓŁY PRODUKTU -->
     <div id="detail-screen">
         <div class="detail-layout" id="detail-content"></div>
-        <button class="back-btn" onclick="pokazSklep()">← Powrót do katalogu</button>
+        <button class="back-btn" onclick="pokazStart()">← Powrót do sklepu</button>
     </div>
 
-    <!-- 4. EKRAN LOGOWANIA / REJESTRACJI -->
+    <!-- 3. EKRAN LOGOWANIA / REJESTRACJI -->
     <div id="auth-screen">
         <div class="custom-box">
             <h2 id="auth-title" style="color: #1a1a2e; margin-top: 0;">Zaloguj się do sklepu 🔑</h2>
@@ -510,10 +520,10 @@
             
             <button class="btn-primary" id="auth-submit-btn" style="width: 100%; border-radius: 8px;" onclick="obsluzFormularzAuth()">Zaloguj się</button>
         </div>
-        <button class="back-btn" onclick="pokazSklep()">← Powrót do sklepu</button>
+        <button class="back-btn" onclick="pokazStart()">← Powrót do sklepu</button>
     </div>
 
-    <!-- 5. KOSZYK I PŁATNOŚCI -->
+    <!-- 4. KOSZYK I PŁATNOŚCI -->
     <div id="cart-screen">
         <div class="custom-box">
             <h2 style="color: #1a1a2e; margin-top: 0;">Twój Koszyk 🛒</h2>
@@ -537,10 +547,10 @@
                 <button class="pay-btn btn-card" onclick="przekierujKarta()">Zapłać Kartą Płatniczą</button>
             </div>
         </div>
-        <button class="back-btn" onclick="pokazSklep()">← Kontynuuj zakupy</button>
+        <button class="back-btn" onclick="pokazStart()">← Kontynuuj zakupy</button>
     </div>
 
-    <!-- 6. PANEL ADMINISTRATORA / PRACOWNIKA -->
+    <!-- 5. PANEL ADMINISTRATORA / PRACOWNIKA -->
     <div id="admin-screen">
         <div class="custom-box" style="border-color: #1a1a2e;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -548,14 +558,14 @@
                     <h2 style="color: #1a1a2e; margin: 0 0 5px 0;">Panel Zarządzania Firmą ⚙️</h2>
                     <p style="color: #666; margin: 0;">Zalogowano jako: <strong id="admin-user-display">Admin</strong></p>
                 </div>
-                <button class="back-btn" style="margin-top: 0;" onclick="pokazSklep()">← Wyjdź z panelu</button>
+                <button class="back-btn" style="margin-top: 0;" onclick="pokazStart()">← Wyjdź z panelu</button>
             </div>
 
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #ccc;">
 
             <!-- ZAKŁADKA 1: Zarządzanie Kontaktem -->
             <div class="admin-section-box" style="border-color: #2e7d32;">
-                <h3 style="color: #2e7d32; margin-top: 0;">📞 Zakładka Kontakt (Telefony i E-maile na stronie)</h3>
+                <h3 style="color: #2e7d32; margin-top: 0;">📞 Zakładka Kontakt (Telefony i E-maile)</h3>
                 <div class="form-group">
                     <label>Numery telefonów (rozdziel przecinkami):</label>
                     <input type="text" id="admin-phones-input" placeholder="+48 123 456 789, +48 987 654 321">
@@ -611,7 +621,7 @@
             <div id="admin-products-list"></div>
 
             <div style="margin-top: 40px; text-align: right;">
-                <button class="back-btn" style="margin-top: 0;" onclick="pokazSklep()">← Wyjdź z panelu</button>
+                <button class="back-btn" style="margin-top: 0;" onclick="pokazStart()">← Wyjdź z panelu</button>
             </div>
         </div>
     </div>
@@ -647,6 +657,15 @@
             },
             {
                 id: 3,
+                nazwa: "Booster Bundle - Zestaw Saszetek",
+                cena: 139.00,
+                magazyn: 15,
+                znizka: 0,
+                zdjęcie: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=600&q=80",
+                opis: "Kompaktowy zestaw zawierający 6 fabrycznie zapakowanych boosterów. Idealny sposób na szybkie powiększenie swojej kolekcji!"
+            },
+            {
+                id: 4,
                 nazwa: "Elite Trainer Box (Standard)",
                 cena: 229.00,
                 magazyn: 20,
@@ -655,7 +674,7 @@
                 opis: "Pełnowartościowy zestaw startowy zawierający 9 boosterów, koszulki na karty, przekładki do talii, oryginalne kostki do znaczników uszkodzeń oraz solidne pudełko do przechowywania kolekcji."
             },
             {
-                id: 4,
+                id: 5,
                 nazwa: "Pojedynczy Booster",
                 cena: 21.99,
                 magazyn: 100,
@@ -675,6 +694,9 @@
             emaily: ["kontakt@tcgzone.pl"]
         };
 
+        // Zapisane Ulubione (Id wybranych produktów)
+        let ulubioneIds = JSON.parse(localStorage.getItem('tcg_ulubione')) || [];
+
         let zalogowanyUzytkownik = JSON.parse(localStorage.getItem('tcg_zalogowany')) || null;
         let trybRejestracji = false;
         let koszyk = [];
@@ -683,16 +705,69 @@
         renderujDaneKontaktoweStart();
         aktualizujWidokKonta();
         aktualizujLicznik();
+        renderujProdukty(produkty);
 
         function zapiszStan() {
             localStorage.setItem('tcg_produkty', JSON.stringify(produkty));
             localStorage.setItem('tcg_uzytkownicy', JSON.stringify(uzytkownicy));
             localStorage.setItem('tcg_wysylka', JSON.stringify(ustawieniaWysylki));
             localStorage.setItem('tcg_kontakt', JSON.stringify(daneKontaktowe));
+            localStorage.setItem('tcg_ulubione', JSON.stringify(ulubioneIds));
             if (zalogowanyUzytkownik) {
                 localStorage.setItem('tcg_zalogowany', JSON.stringify(zalogowanyUzytkownik));
             } else {
                 localStorage.removeItem('tcg_zalogowany');
+            }
+        }
+
+        /* LOGIKA WYSZUKIWANIA */
+        function wykonajWyszukiwanie() {
+            const fraza = document.getElementById('search-input').value.trim().toLowerCase();
+            const titleEl = document.getElementById('search-results-title');
+            const subTitleEl = document.getElementById('search-results-subtitle');
+
+            if (!fraza) {
+                titleEl.innerText = "Katalog Produktów";
+                subTitleEl.innerText = "Wszystkie dostępne zestawy Pokémon TCG w naszym sklepie.";
+                renderujProdukty(produkty);
+                return;
+            }
+
+            const przefiltrowane = produkty.filter(p => 
+                p.nazwa.toLowerCase().includes(fraza) || 
+                p.opis.toLowerCase().includes(fraza)
+            );
+
+            titleEl.innerText = `Wyniki wyszukiwania dla: "${fraza}"`;
+            subTitleEl.innerText = `Znaleziono produktów: ${przefiltrowane.length}`;
+            renderujProdukty(przefiltrowane);
+        }
+
+        function obsluzEnterSzukania(event) {
+            if (event.key === 'Enter') {
+                wykonajWyszukiwanie();
+            }
+        }
+
+        /* LOGIKA ULUBIONYCH (SERDUSZKA) */
+        function przełączUlubione(event, id) {
+            event.stopPropagation(); // Zabezpieczenie przed otwieraniem widoku szczegółów po kliknięciu w serduszko
+            
+            const index = ulubioneIds.indexOf(id);
+            if (index === -1) {
+                ulubioneIds.push(id);
+            } else {
+                ulubioneIds.splice(index, 1);
+            }
+
+            zapiszStan();
+            
+            // Ponowne renderowanie w zależności od obecnej frazy w wyszukiwarce
+            const fraza = document.getElementById('search-input').value.trim().toLowerCase();
+            if (fraza) {
+                wykonajWyszukiwanie();
+            } else {
+                renderujProdukty(produkty);
             }
         }
 
@@ -847,7 +922,7 @@
             if (zalogowanyUzytkownik.role === "admin" || zalogowanyUzytkownik.role === "worker") {
                 pokazPanelAdmina();
             } else {
-                pokazSklep();
+                pokazStart();
             }
         }
 
@@ -855,7 +930,7 @@
             zalogowanyUzytkownik = null;
             localStorage.removeItem('tcg_zalogowany');
             aktualizujWidokKonta();
-            pokazSklep();
+            pokazStart();
         }
 
         function aktualizujWidokKonta() {
@@ -967,6 +1042,7 @@
 
             alert("Pomyślnie dodano nowy produkt do sklepu!");
             renderujAdminListaProduktow();
+            renderujProdukty(produkty);
         }
 
         function zapiszZmianyProduktu(id) {
@@ -995,6 +1071,7 @@
             zapiszStan();
             alert(`Zapisano zmiany dla produktu: ${p.nazwa}`);
             renderujAdminListaProduktow();
+            renderujProdukty(produkty);
         }
 
         function usunProdukt(id) {
@@ -1002,6 +1079,7 @@
                 produkty = produkty.filter(p => p.id !== id);
                 zapiszStan();
                 renderujAdminListaProduktow();
+                renderujProdukty(produkty);
             }
         }
 
@@ -1049,13 +1127,6 @@
             window.scrollTo(0, 0);
         }
 
-        function pokazSklep() {
-            ukryjEkrany();
-            document.getElementById('shop-screen').style.display = 'block';
-            window.scrollTo(0, 0);
-            renderujProdukty();
-        }
-
         function pokazKoszyk() {
             if (!zalogowanyUzytkownik) {
                 alert("Musisz się zalogować, aby przejść do koszyka i dokonać zakupu!");
@@ -1070,28 +1141,37 @@
 
         function ukryjEkrany() {
             document.getElementById('home-screen').style.display = 'none';
-            document.getElementById('shop-screen').style.display = 'none';
             document.getElementById('detail-screen').style.display = 'none';
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('cart-screen').style.display = 'none';
             document.getElementById('admin-screen').style.display = 'none';
         }
 
-        function renderujProdukty() {
+        function renderujProdukty(listaProduktyw) {
             const kontener = document.getElementById('product-list');
             kontener.innerHTML = '';
+
+            if (listaProduktyw.length === 0) {
+                kontener.innerHTML = '<p style="grid-column: 1 / -1; color: #888; font-size: 1.2em; margin: 40px 0;">Brak produktów spełniających podane kryteria wyszukiwania.</p>';
+                return;
+            }
             
-            produkty.forEach(produkt => {
+            listaProduktyw.forEach(produkt => {
                 let finalnaCena = produkt.cena;
                 let maZnizke = produkt.znizka > 0 && produkt.znizka < 100;
                 if (maZnizke) {
                     finalnaCena = produkt.cena * (1 - produkt.znizka / 100);
                 }
 
+                const jestUlubiony = ulubioneIds.includes(produkt.id);
+
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.onclick = () => otwórzProdukt(produkt.id);
                 card.innerHTML = `
+                    <button class="favorite-heart-btn" onclick="przełączUlubione(event, ${produkt.id})" title="${jestUlubiony ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'}">
+                        ${jestUlubiony ? '❤️' : '🤍'}
+                    </button>
                     ${maZnizke ? `<div class="discount-badge">-${produkt.znizka}%</div>` : ''}
                     <img src="${produkt.zdjęcie}" alt="${produkt.nazwa}" class="product-img">
                     <div class="product-info">
@@ -1204,7 +1284,7 @@
 
             aktualizujLicznik();
             alert(`Dodano do koszyka: ${wyblanyProdukt.nazwa} (${ilosc} szt.)`);
-            pokazSklep();
+            pokazStart();
         }
 
         function aktualizujLicznik() {
