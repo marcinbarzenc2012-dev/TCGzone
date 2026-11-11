@@ -592,7 +592,14 @@
             font-size: 1.1em;
         }
 
-        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; padding: 15px 0; }
+        .cart-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e0e0e0; 
+            padding: 15px 0; 
+            gap: 15px;
+        }
         
         .cart-summary-box { text-align: right; margin-top: 25px; }
         .cart-summary-total { color: #2e7d32; margin: 0; font-size: 1.5em; }
@@ -1965,6 +1972,12 @@
             pokazStart();
         }
 
+        function usunZKoszyka(id) {
+            koszyk = koszyk.filter(item => item.id !== id);
+            aktualizujLicznik();
+            renderujKoszyk();
+        }
+
         function aktualizujLicznik() {
             const sumaSztuk = koszyk.reduce((sum, item) => sum + item.ilosc, 0);
             document.getElementById('cart-count').innerText = sumaSztuk;
@@ -1998,7 +2011,10 @@
                         <strong style="color: #1a1a2e; font-size: 1.1em;">${item.nazwa}</strong><br>
                         <small style="color: #666;">Ilość: ${item.ilosc} szt. × ${Number(item.cena).toFixed(2)} zł</small>
                     </div>
-                    <div style="font-weight: bold; color: #2e7d32; font-size: 1.2em;">${iloscKwota.toFixed(2)} zł</div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-weight: bold; color: #2e7d32; font-size: 1.2em; white-space: nowrap;">${iloscKwota.toFixed(2)} zł</div>
+                        <button class="btn-delete" style="padding: 6px 12px; font-size: 0.9em;" onclick="usunZKoszyka(${item.id})">Usuń</button>
+                    </div>
                 `;
                 container.appendChild(row);
             });
