@@ -178,7 +178,21 @@
             padding: 0 20px;
         }
 
-        /* Pasek filtrów i sortowania */
+        /* Stały nagłówek wyszukiwania w panelu sklepu */
+        .shop-top-search-bar {
+            background: #1a1a2e;
+            padding: 25px 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Pasek filtrów, sortowania i suwaka dwukropeczkowego */
         .filter-sort-bar {
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
@@ -189,7 +203,7 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
         }
         .filter-group {
             display: flex;
@@ -201,12 +215,72 @@
             font-weight: bold;
             color: #1a1a2e;
         }
-        .filter-group select, .filter-group input {
+        .filter-group select {
             padding: 8px 12px;
             border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 1em;
             outline: none;
+        }
+
+        /* Stylowanie podwójnego suwaka cenowego z dwoma kropeczkami */
+        .price-range-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 280px;
+        }
+        .price-range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        .double-slider-container {
+            position: relative;
+            height: 35px;
+            display: flex;
+            align-items: center;
+        }
+        .double-slider-container input[type="range"] {
+            position: absolute;
+            width: 100%;
+            background: none;
+            pointer-events: none;
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+        .double-slider-container input[type="range"]::-webkit-slider-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #ffcb05;
+            border: 2px solid #d4a500;
+            pointer-events: auto;
+            cursor: pointer;
+            -webkit-appearance: appearance;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .double-slider-container input[type="range"]::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #ffcb05;
+            border: 2px solid #d4a500;
+            pointer-events: auto;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        /* Pasek pod spodem suwaka */
+        .slider-track {
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            background: #ddd;
+            border-radius: 3px;
+            z-index: 1;
         }
 
         .shop-grid { 
@@ -463,7 +537,7 @@
         }
         .accept-btn:hover { background: #256628; }
 
-        .back-btn { background-color: #e0e0e0; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        .back-btn { background-color: #e0e0e0; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .back-btn:hover { background-color: #d0d0d0; }
 
         footer { text-align: center; padding: 20px; color: #777; font-size: 0.9em; border-top: 1px solid #eee; margin-top: 60px; }
@@ -494,8 +568,8 @@
             <p>Wyszukaj interesujące Cię karty lub zestawy Pokémon TCG:</p>
             
             <div class="search-bar-container">
-                <input type="text" id="search-input" class="search-input" placeholder="Wpisz nazwę (np. booster bundle, ETB)..." onkeypress="obsluzEnterSzukania(event)">
-                <button class="search-btn" onclick="wykonajWyszukiwanie()" title="Szukaj">🔍</button>
+                <input type="text" id="search-input" class="search-input" placeholder="Wpisz nazwę (np. booster bundle, ETB)..." onkeypress="obsluzEnterSzukania(event, 'home')">
+                <button class="search-btn" onclick="wykonajWyszukiwanie('home')" title="Szukaj">🔍</button>
             </div>
         </div>
 
@@ -522,15 +596,21 @@
 
     <!-- 2. PANEL WYNIKÓW WYSZUKIWANIA / KATALOGU -->
     <div id="shop-screen">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <div>
-                <h1 id="shop-results-title" style="color: #1a1a2e; margin: 0 0 5px 0; font-size: 2.2em;">Wyniki wyszukiwania</h1>
-                <p id="shop-results-subtitle" style="color: #666; margin: 0;">Produkty dopasowane do Twojego zapytania.</p>
+        <!-- Stała wyszukiwarka na górze wyników z przyciskiem Powrót -->
+        <div class="shop-top-search-bar">
+            <button class="back-btn" onclick="pokazStart()">← Wróć</button>
+            <div class="search-bar-container" style="max-width: 500px; flex-grow: 1; margin: 0 15px;">
+                <input type="text" id="search-input-shop" class="search-input" placeholder="Wpisz, aby szukać dalej..." onkeypress="obsluzEnterSzukania(event, 'shop')">
+                <button class="search-btn" onclick="wykonajWyszukiwanie('shop')" title="Szukaj" style="width: 42px; height: 42px; font-size: 1.1em;">🔍</button>
             </div>
-            <button class="back-btn" style="margin-top: 0;" onclick="pokazStart()">← Nowe wyszukiwanie</button>
         </div>
 
-        <!-- Pasek sortowania i filtrów cenowych -->
+        <div style="margin-bottom: 20px;">
+            <h1 id="shop-results-title" style="color: #1a1a2e; margin: 0 0 5px 0; font-size: 2.2em;">Wyniki wyszukiwania</h1>
+            <p id="shop-results-subtitle" style="color: #666; margin: 0;">Produkty dopasowane do Twojego zapytania.</p>
+        </div>
+
+        <!-- Pasek sortowania i suwaka cenowego -->
         <div class="filter-sort-bar">
             <div class="filter-group">
                 <label>🔄 Sortuj:</label>
@@ -542,11 +622,20 @@
                     <option value="newest">Najnowsze</option>
                 </select>
             </div>
+            
+            <!-- Suwak dwukropeczkowy do ceny -->
             <div class="filter-group">
-                <label>💰 Cena od:</label>
-                <input type="number" id="filter-price-min" placeholder="min zł" style="width: 100px;" oninput="zastosujFiltryISortowanie()">
-                <label>do:</label>
-                <input type="number" id="filter-price-max" placeholder="max zł" style="width: 100px;" oninput="zastosujFiltryISortowanie()">
+                <div class="price-range-wrapper">
+                    <div class="price-range-labels">
+                        <span>Od: <strong id="price-min-val">0</strong> zł</span>
+                        <span>Do: <strong id="price-max-val">1000</strong> zł</span>
+                    </div>
+                    <div class="double-slider-container">
+                        <div class="slider-track"></div>
+                        <input type="range" id="slider-min" min="0" max="1000" value="0" step="1" oninput="zmienSuwakCenowy()">
+                        <input type="range" id="slider-max" min="0" max="1000" value="1000" step="1" oninput="zmienSuwakCenowy()">
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -555,16 +644,20 @@
 
     <!-- 3. PANEL ULUBIONYCH -->
     <div id="favorites-screen">
-        <h1 style="color: #1a1a2e; font-size: 2.5em; margin-bottom: 5px;">Twoje Ulubione Rzeczy ❤️</h1>
-        <p style="color: #666; font-size: 1.1em; margin-bottom: 30px;">Przedmioty, które polubiłeś i zapisałeś na później.</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h1 style="color: #1a1a2e; font-size: 2.5em; margin: 0 0 5px 0;">Twoje Ulubione Rzeczy ❤️</h1>
+                <p style="color: #666; font-size: 1.1em; margin: 0;">Przedmioty, które polubiłeś i zapisałeś na później.</p>
+            </div>
+            <button class="back-btn" onclick="pokazStart()">← Wróć</button>
+        </div>
         <div class="shop-grid" id="favorites-product-list"></div>
-        <button class="back-btn" onclick="pokazStart()" style="margin-top: 40px;">← Powrót do strony głównej</button>
     </div>
 
     <!-- 4. SZCZEGÓŁY PRODUKTU -->
     <div id="detail-screen">
         <div class="detail-layout" id="detail-content"></div>
-        <button class="back-btn" onclick="pokazStart()">← Powrót do sklepu</button>
+        <button class="back-btn" onclick="pokazStart()" style="margin-top: 20px;">← Wróć</button>
     </div>
 
     <!-- 5. EKRAN LOGOWANIA / REJESTRACJI -->
@@ -586,13 +679,16 @@
             
             <button class="btn-primary" id="auth-submit-btn" style="width: 100%; border-radius: 8px;" onclick="obsluzFormularzAuth()">Zaloguj się</button>
         </div>
-        <button class="back-btn" onclick="pokazStart()">← Powrót do strony</button>
+        <button class="back-btn" onclick="pokazStart()" style="margin-top: 20px;">← Wróć</button>
     </div>
 
     <!-- 6. KOSZYK I PŁATNOŚCI -->
     <div id="cart-screen">
         <div class="custom-box">
-            <h2 style="color: #1a1a2e; margin-top: 0;">Twój Koszyk 🛒</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color: #1a1a2e; margin: 0;">Twój Koszyk 🛒</h2>
+                <button class="back-btn" style="margin-top: 0;" onclick="pokazStart()">← Wróć</button>
+            </div>
             <div id="cart-items-list"><p>Twój koszyk jest pusty.</p></div>
             
             <div class="cart-summary-box">
@@ -613,7 +709,6 @@
                 <button class="pay-btn btn-card" onclick="przekierujKarta()">Zapłać Kartą Płatniczą</button>
             </div>
         </div>
-        <button class="back-btn" onclick="pokazStart()">← Kontynuuj zakupy</button>
     </div>
 
     <!-- 7. PANEL ADMINISTRATORA / PRACOWNIKA -->
@@ -624,10 +719,20 @@
                     <h2 style="color: #1a1a2e; margin: 0 0 5px 0;">Panel Zarządzania Firmą ⚙️</h2>
                     <p style="color: #666; margin: 0;">Zalogowano jako: <strong id="admin-user-display">Admin</strong></p>
                 </div>
-                <button class="back-btn" style="margin-top: 0;" onclick="pokazStart()">← Wyjdź z panelu</button>
+                <button class="back-btn" style="margin-top: 0;" onclick="pokazStart()">← Wróć</button>
             </div>
 
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #ccc;">
+
+            <!-- ZAKŁADKA 0: Ustawienia Sklepu (Maksymalna cena suwaka) -->
+            <div class="admin-section-box" style="border-color: #ffcb05;">
+                <h3 style="color: #1a1a2e; margin-top: 0;">🎛️ Ustawienia Maksymalnej Ceny w Wyszukiwarce</h3>
+                <div class="form-group">
+                    <label>Najwyższa cena możliwa do ustawienia na suwaku (zł):</label>
+                    <input type="number" step="10" id="admin-max-price-limit" placeholder="np. 1500">
+                </div>
+                <button class="btn-primary" style="width: 100%; border-radius: 8px; font-size: 1.05em; background-color: #ffcb05; color: #000; font-weight: bold;" onclick="zapiszLimitCenySuwaka()">💾 Zapisz limit suwaka</button>
+            </div>
 
             <!-- ZAKŁADKA 1: Zarządzanie Kontaktem -->
             <div class="admin-section-box" style="border-color: #2e7d32;">
@@ -687,7 +792,7 @@
             <div id="admin-products-list"></div>
 
             <div style="margin-top: 40px; text-align: right;">
-                <button class="back-btn" style="margin-top: 0;" onclick="pokazStart()">← Wyjdź z panelu</button>
+                <button class="back-btn" style="margin-top: 0;" onclick="pokazStart()">← Wróć</button>
             </div>
         </div>
     </div>
@@ -765,12 +870,15 @@
             emaily: ["kontakt@tcgzone.pl"]
         };
 
+        let ustawieniaSklepu = JSON.parse(localStorage.getItem('tcg_ustawienia_sklepu')) || {
+            maxCenaSuwaka: 1000
+        };
+
         let ulubioneIds = JSON.parse(localStorage.getItem('tcg_ulubione')) || [];
         let zalogowanyUzytkownik = JSON.parse(localStorage.getItem('tcg_zalogowany')) || null;
         let trybRejestracji = false;
         let koszyk = [];
         let wyblanyProdukt = null;
-        
         let aktualnaFrazaSzukania = "";
 
         renderujDaneKontaktoweStart();
@@ -783,6 +891,7 @@
             localStorage.setItem('tcg_uzytkownicy', JSON.stringify(uzytkownicy));
             localStorage.setItem('tcg_wysylka', JSON.stringify(ustawieniaWysylki));
             localStorage.setItem('tcg_kontakt', JSON.stringify(daneKontaktowe));
+            localStorage.setItem('tcg_ustawienia_sklepu', JSON.stringify(ustawieniaSklepu));
             localStorage.setItem('tcg_ulubione', JSON.stringify(ulubioneIds));
             if (zalogowanyUzytkownik) {
                 localStorage.setItem('tcg_zalogowany', JSON.stringify(zalogowanyUzytkownik));
@@ -791,17 +900,25 @@
             }
         }
 
-        /* WYSZUKIWANIE I PRZEWIJANIE DO PANELU WYNIKÓW */
-        function wykonajWyszukiwanie() {
-            const fraza = document.getElementById('search-input').value.trim().toLowerCase();
+        /* WYSZUKIWANIE (Z obu miejsc: ze strony głównej oraz ze stałego paska na górze wyników) */
+        function wykonajWyszukiwanie(zrodlo) {
+            let fraza = "";
+            if (zrodlo === 'home') {
+                fraza = document.getElementById('search-input').value.trim().toLowerCase();
+            } else {
+                fraza = document.getElementById('search-input-shop').value.trim().toLowerCase();
+            }
+
             aktualnaFrazaSzukania = fraza;
             
             ukryjEkrany();
             document.getElementById('shop-screen').style.display = 'block';
+
+            // Synchronizuj wartości w obu polach wyszukiwania
+            document.getElementById('search-input').value = fraza;
+            document.getElementById('search-input-shop').value = fraza;
             
             const titleEl = document.getElementById('shop-results-title');
-            const subTitleEl = document.getElementById('shop-results-subtitle');
-
             if (fraza) {
                 titleEl.innerText = `Wyniki wyszukiwania dla: "${fraza}"`;
             } else {
@@ -809,17 +926,51 @@
             }
 
             document.getElementById('sort-select').value = "default";
-            document.getElementById('filter-price-min').value = "";
-            document.getElementById('filter-price-max').value = "";
+            
+            // Inicjalizacja suwaka z limitem z panelu admina
+            const sMin = document.getElementById('slider-min');
+            const sMax = document.getElementById('slider-max');
+            const limitMax = ustawieniaSklepu.maxCenaSuwaka;
+
+            sMin.max = limitMax;
+            sMax.max = limitMax;
+            sMin.value = 0;
+            sMax.value = limitMax;
+
+            document.getElementById('price-min-val').innerText = "0";
+            document.getElementById('price-max-val').innerText = limitMax;
 
             zastosujFiltryISortowanie();
             window.scrollTo(0, 0);
         }
 
-        function obsluzEnterSzukania(event) {
+        function obsluzEnterSzukania(event, zrodlo) {
             if (event.key === 'Enter') {
-                wykonajWyszukiwanie();
+                wykonajWyszukiwanie(zrodlo);
             }
+        }
+
+        /* OBSŁUGA DWUKROPECZKOWEGO SUWAKA CENOWEGO */
+        function zmienSuwakCenowy() {
+            const sMin = document.getElementById('slider-min');
+            const sMax = document.getElementById('slider-max');
+            
+            let valMin = parseInt(sMin.value);
+            let valMax = parseInt(sMax.value);
+
+            if (valMin > valMax) {
+                // Zapobiegaj nakładaniu się kropeczek na siebie w złej kolejności
+                let temp = valMin;
+                sMin.value = valMax;
+                sMax.value = temp;
+                valMin = parseInt(sMin.value);
+                valMax = parseInt(sMax.value);
+            }
+
+            document.getElementById('price-min-val').innerText = valMin;
+            document.getElementById('price-max-val').innerText = valMax;
+
+            zastosujFiltryISortowanie();
         }
 
         /* FILTROWANIE I SORTOWANIE PRODUKTÓW */
@@ -834,22 +985,14 @@
                 );
             }
 
-            // 2. Filtrowanie po cenie (od - do)
-            const minCena = parseFloat(document.getElementById('filter-price-min').value);
-            const maxCena = parseFloat(document.getElementById('filter-price-max').value);
+            // 2. Filtrowanie po cenie z dwukropeczkowego suwaka
+            const minCena = parseInt(document.getElementById('slider-min').value);
+            const maxCena = parseInt(document.getElementById('slider-max').value);
 
-            if (!isNaN(minCena)) {
-                wynik = wynik.filter(p => {
-                    let cenaAktualna = p.znizka > 0 && p.znizka < 100 ? p.cena * (1 - p.znizka / 100) : p.cena;
-                    return cenaAktualna >= minCena;
-                });
-            }
-            if (!isNaN(maxCena)) {
-                wynik = wynik.filter(p => {
-                    let cenaAktualna = p.znizka > 0 && p.znizka < 100 ? p.cena * (1 - p.znizka / 100) : p.cena;
-                    return cenaAktualna <= maxCena;
-                });
-            }
+            wynik = wynik.filter(p => {
+                let cenaAktualna = p.znizka > 0 && p.znizka < 100 ? p.cena * (1 - p.znizka / 100) : p.cena;
+                return cenaAktualna >= minCena && cenaAktualna <= maxCena;
+            });
 
             // 3. Sortowanie
             const sortVal = document.getElementById('sort-select').value;
@@ -866,10 +1009,8 @@
                     return cb - ca;
                 });
             } else if (sortVal === 'popularity') {
-                // Od największej ilości w magazynie / popularności
                 wynik.sort((a, b) => b.magazyn - a.magazyn);
             } else if (sortVal === 'newest') {
-                // Najnowsze (najwyższe ID lub dataDodania)
                 wynik.sort((a, b) => (b.dataDodania || b.id) - (a.dataDodania || a.id));
             }
 
@@ -891,7 +1032,6 @@
             zapiszStan();
             aktualizujLicznikUlubionych();
 
-            // Odświeżenie widoku w zależności od tego, gdzie jesteśmy
             if (document.getElementById('shop-screen').style.display === 'block') {
                 zastosujFiltryISortowanie();
             } else if (document.getElementById('favorites-screen').style.display === 'block') {
@@ -962,6 +1102,17 @@
                 phoneDiv.innerHTML = daneKontaktowe.telefony.map(p => `<a href="tel:${p.replace(/\s+/g, '')}">${p}</a>`).join('');
                 emailDiv.innerHTML = daneKontaktowe.emaily.map(e => `<a href="mailto:${e}">${e}</a>`).join('');
             }
+        }
+
+        function zapiszLimitCenySuwaka() {
+            const limitIn = parseInt(document.getElementById('admin-max-price-limit').value);
+            if (isNaN(limitIn) || limitIn <= 0) {
+                alert("Wprowadź poprawną kwotę graniczną dla suwaka!");
+                return;
+            }
+            ustawieniaSklepu.maxCenaSuwaka = limitIn;
+            zapiszStan();
+            alert("Maksymalna cena suwaka została zaktualizowana!");
         }
 
         function zapiszDaneKontaktowe() {
@@ -1147,6 +1298,7 @@
             document.getElementById('admin-free-shipping-threshold').value = ustawieniaWysylki.progDarmowej;
             document.getElementById('admin-phones-input').value = daneKontaktowe.telefony.join(', ');
             document.getElementById('admin-emails-input').value = daneKontaktowe.emaily.join(', ');
+            document.getElementById('admin-max-price-limit').value = ustawieniaSklepu.maxCenaSuwaka;
 
             const usersSection = document.getElementById('admin-users-management-section');
             if (zalogowanyUzytkownik.role === "admin") {
