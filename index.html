@@ -652,6 +652,7 @@
         }
         .admin-action-buttons { display: flex; gap: 8px; }
         .btn-delete { background: #d32f2f; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-edit-banner { background: #0288d1; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-grant { background: #0288d1; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-save-prod { background: #2e7d32; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         
@@ -900,10 +901,10 @@
 
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #ccc;">
 
-            <!-- ZAKŁADKA REKLAMA / ASORTYMENT (KARUZELA) -->
+            <!-- ZAKŁADKA REKLAMA / ASORTYMENT (KARUZELA) Z EDYCJĄ -->
             <div class="admin-section-box" style="border-color: #ffcb05;">
-                <h3 style="color: #1a1a2e; margin-top: 0;">📢 Zarządzanie Banerami / Reklamą w Karuzeli</h3>
-                <p style="color: #666; font-size: 0.95em; margin-bottom: 15px;">Dodaj linki do zdjęć i opisy, które będą się przewijać na stronie głównej:</p>
+                <h3 style="color: #1a1a2e; margin-top: 0;" id="admin-carousel-form-title">📢 Dodaj Baner / Reklamę do Karuzeli</h3>
+                <input type="hidden" id="edit-banner-id" value="">
                 <div class="form-group">
                     <label>Link do zdjęcia (URL baneru):</label>
                     <input type="text" id="admin-promo-img" placeholder="https://images.unsplash.com/...">
@@ -912,7 +913,10 @@
                     <label>Tekst / Opis baneru (Asortyment):</label>
                     <input type="text" id="admin-promo-title" placeholder="np. Nowa dostawa Booster Boxów!">
                 </div>
-                <button class="btn-primary" style="width: 100%; border-radius: 8px; font-size: 1.05em; background-color: #ffcb05; color: #000; font-weight: bold; border: none; padding: 12px;" onclick="dodajBannerDoKaruzeli()">+ Dodaj baner do karuzeli</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-primary" id="btn-save-banner" style="flex-grow: 1; border-radius: 8px; font-size: 1.05em; background-color: #ffcb05; color: #000; font-weight: bold; border: none; padding: 12px; cursor: pointer;" onclick="zapiszBannerKaruzeli()">+ Dodaj baner do karuzeli</button>
+                    <button class="back-btn" id="btn-cancel-banner" style="display: none;" onclick="anulujEdycjeBaneru()">Anuluj</button>
+                </div>
                 
                 <div id="admin-carousel-items-list" style="margin-top: 20px;"></div>
             </div>
@@ -1178,32 +1182,71 @@
             });
         }
 
-        function dodajBannerDoKaruzeli() {
+        function zapiszBannerKaruzeli() {
             const zdjecie = document.getElementById('admin-promo-img').value.trim();
             const tytul = document.getElementById('admin-promo-title').value.trim();
+            const editId = document.getElementById('edit-banner-id').value;
 
             if (!zdjecie || !tytul) {
                 alert("Wypełnij link do zdjęcia oraz opis baneru!");
                 return;
             }
 
-            const nowyId = promoBanery.length > 0 ? Math.max(...promoBanery.map(b => b.id)) + 1 : 1;
-            promoBanery.push({ id: nowyId, zdjecie, tytul });
+            if (editId) {
+                // Tryb edycji
+                const baner = promoBanery.find(b => b.id == editId);
+                if (baner) {
+                    baner.zdjecie = zdjecie;
+                    baner.tytul = tytul;
+                    alert("Baner został pomyślnie zaktualizowany!");
+                }
+                anulujEdycjeBaneru();
+            } else {
+                // Tryb dodawania nowego
+                const nowyId = promoBanery.length > 0 ? Math.max(...promoBanery.map(b => b.id)) + 1 : 1;
+                promoBanery.push({ id: nowyId, zdjecie, tytul });
+                alert("Baner został dodany do karuzeli reklamowej!");
+                document.getElementById('admin-promo-img').value = '';
+                document.getElementById('admin-promo-title').value = '';
+            }
+
             zapiszStan();
-
-            document.getElementById('admin-promo-img').value = '';
-            document.getElementById('admin-promo-title').value = '';
-
-            alert("Baner został dodany do karuzeli reklamowej!");
             renderujAdminListaBanerow();
             inicjalizujKaruzele();
         }
 
+        function edytujBannerKaruzeli(id) {
+            const baner = promoBanery.find(b => b.id === id);
+            if (!baner) return;
+
+            document.getElementById('admin-promo-img').value = baner.zdjecie;
+            document.getElementById('admin-promo-title').value = baner.tytul;
+            document.getElementById('edit-banner-id').value = baner.id;
+
+            document.getElementById('admin-carousel-form-title').innerText = "✏️ Edytuj Baner / Reklamę";
+            document.getElementById('btn-save-banner').innerText = "💾 Zapisz zmiany banera";
+            document.getElementById('btn-cancel-banner').style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function anulujEdycjeBaneru() {
+            document.getElementById('admin-promo-img').value = '';
+            document.getElementById('admin-promo-title').value = '';
+            document.getElementById('edit-banner-id').value = '';
+
+            document.getElementById('admin-carousel-form-title').innerText = "📢 Dodaj Baner / Reklamę do Karuzeli";
+            document.getElementById('btn-save-banner').innerText = "+ Dodaj baner do karuzeli";
+            document.getElementById('btn-cancel-banner').style.display = 'none';
+        }
+
         function usunBannerKaruzeli(id) {
-            promoBanery = promoBanery.filter(b => b.id !== id);
-            zapiszStan();
-            renderujAdminListaBanerow();
-            inicjalizujKaruzele();
+            if (confirm("Czy na pewno chcesz usunąć ten baner?")) {
+                promoBanery = promoBanery.filter(b => b.id !== id);
+                zapiszStan();
+                renderujAdminListaBanerow();
+                inicjalizujKaruzele();
+            }
         }
 
         function renderujAdminListaBanerow() {
@@ -1215,11 +1258,14 @@
                 const item = document.createElement('div');
                 item.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #ddd;";
                 item.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <img src="${b.zdjecie}" style="width: 50px; height: 35px; object-fit: cover; border-radius: 4px;">
-                        <span style="font-size: 0.9em; font-weight: bold;">${b.tytul}</span>
+                    <div style="display: flex; align-items: center; gap: 10px; max-width: 60%;">
+                        <img src="${b.zdjecie}" style="width: 50px; height: 35px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">
+                        <span style="font-size: 0.9em; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${b.tytul}</span>
                     </div>
-                    <button class="btn-delete" style="padding: 5px 10px; font-size: 0.85em;" onclick="usunBannerKaruzeli(${b.id})">Usuń</button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn-edit-banner" style="padding: 5px 10px; font-size: 0.85em;" onclick="edytujBannerKaruzeli(${b.id})">Edytuj</button>
+                        <button class="btn-delete" style="padding: 5px 10px; font-size: 0.85em;" onclick="usunBannerKaruzeli(${b.id})">Usuń</button>
+                    </div>
                 `;
                 container.appendChild(item);
             });
@@ -1634,6 +1680,7 @@
                 usersSection.style.display = "none";
             }
 
+            anulujEdycjeBaneru();
             renderujAdminListaBanerow();
             renderujAdminListaProduktow();
             window.scrollTo(0, 0);
