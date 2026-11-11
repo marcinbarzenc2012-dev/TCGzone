@@ -106,16 +106,15 @@
         .search-hero p { color: #00ffcc; font-size: 1.3em; font-weight: bold; margin-bottom: 35px; }
         
         .search-bar-wrapper-main {
-            max-width: 700px;
+            max-width: 600px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             background: #ffffff;
             border-radius: 40px;
-            padding: 6px 12px 6px 20px;
+            padding: 6px 12px 6px 25px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
             border: 3px solid #ffcb05;
-            gap: 10px;
         }
         .search-input {
             flex-grow: 1;
@@ -124,17 +123,6 @@
             font-size: 1.2em;
             padding: 10px 5px;
             color: #1a1a2e;
-        }
-        .quick-sort-select {
-            background: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            padding: 8px 12px;
-            font-size: 0.9em;
-            font-weight: bold;
-            color: #333;
-            outline: none;
-            cursor: pointer;
         }
         .search-btn {
             background: #ffcb05;
@@ -156,12 +144,113 @@
             transform: scale(1.08);
         }
 
-        /* Pasek Kontaktowy */
+        /* KARUZELA REKLAMOWA / ASORTYMENT (Slider) */
+        .promo-carousel-section {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        .promo-carousel-section h2 {
+            color: #1a1a2e;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .carousel-container {
+            position: relative;
+            background: #f8f9fa;
+            border: 3px solid #ffcb05;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        .carousel-slide .caption {
+            background: rgba(26, 26, 46, 0.9);
+            color: #ffcb05;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Strzałki karuzeli */
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .carousel-arrow:hover { background: rgba(0,0,0,0.8); }
+        .carousel-prev { left: 15px; }
+        .carousel-next { right: 15px; }
+
+        /* Kropeczki na dole karuzeli */
+        .carousel-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #cccccc;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .carousel-dot.active {
+            background: #000000;
+            transform: scale(1.2);
+        }
+
+        /* Pasek Kontaktowy (Bardzo nisko) */
         .contact-slider-wrapper {
             max-width: 900px;
-            margin: -35px auto 60px auto;
-            position: relative;
-            z-index: 10;
+            margin: 60px auto 30px auto;
             padding: 0 20px;
         }
         .contact-slider-card {
@@ -204,7 +293,6 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
         }
 
-        /* Przycisk otwierający okienko sortowania */
         .open-modal-btn {
             background: #ffcb05;
             color: #000;
@@ -271,9 +359,7 @@
         }
         .modal-close-btn:hover { background: #d0d0d0; }
 
-        .modal-section {
-            margin-bottom: 25px;
-        }
+        .modal-section { margin-bottom: 25px; }
         .modal-section label {
             display: block;
             font-weight: bold;
@@ -289,7 +375,6 @@
             outline: none;
         }
 
-        /* Ulepszony suwak cenowy z idealnie dopasowaną linią i kółeczkami */
         .price-range-wrapper {
             background: #f8f9fa;
             border: 1px solid #e0e0e0;
@@ -632,7 +717,7 @@
         </div>
     </div>
 
-    <!-- 1. STRONA GŁÓWNA Z WYSZUKIWARKĄ -->
+    <!-- 1. STRONA GŁÓWNA Z WYSZUKIWARKĄ I KARUZELĄ REKLAMOWĄ -->
     <div id="home-screen">
         <div class="search-hero">
             <h1>TCG Zone</h1>
@@ -640,18 +725,24 @@
             
             <div class="search-bar-wrapper-main">
                 <input type="text" id="search-input" class="search-input" placeholder="Wpisz nazwę (np. booster bundle, ETB)..." onkeypress="obsluzEnterSzukania(event, 'home')">
-                <select id="quick-sort-home" class="quick-sort-select" title="Szybkie sortowanie">
-                    <option value="default">Sortuj</option>
-                    <option value="price-asc">Cena: od najniższej</option>
-                    <option value="price-desc">Cena: od najwyższej</option>
-                    <option value="popularity">Popularność</option>
-                    <option value="newest">Najnowsze</option>
-                </select>
                 <button class="search-btn" onclick="wykonajWyszukiwanie('home')" title="Szukaj">🔍</button>
             </div>
         </div>
 
-        <!-- Pasek Kontaktowy -->
+        <!-- Karuzela Reklamowa / Asortyment na stronie głównej -->
+        <div class="promo-carousel-section">
+            <h2>Wyróżniony Asortyment i Promocje 🔥</h2>
+            <div class="carousel-container" id="promo-carousel">
+                <button class="carousel-arrow carousel-prev" onclick="zmienSlajdKaruzeli(-1)">❮</button>
+                <button class="carousel-arrow carousel-next" onclick="zmienSlajdKaruzeli(1)">❯</button>
+                
+                <div id="carousel-slides-wrapper"></div>
+
+                <div class="carousel-dots" id="carousel-dots-container"></div>
+            </div>
+        </div>
+
+        <!-- Pasek Kontaktowy (Bardzo nisko) -->
         <div class="contact-slider-wrapper">
             <div class="contact-slider-card">
                 <div class="contact-item-group">
@@ -676,15 +767,8 @@
     <div id="shop-screen">
         <div class="shop-top-search-bar">
             <button class="back-btn" onclick="pokazStart()">← Wróć</button>
-            <div class="search-bar-wrapper-main" style="max-width: 500px; flex-grow: 1; margin: 0 10px; background: #fff;">
+            <div class="search-bar-wrapper-main" style="max-width: 500px; flex-grow: 1; margin: 0 10px; background: #fff; border: 2px solid #ffcb05;">
                 <input type="text" id="search-input-shop" class="search-input" placeholder="Szukaj dalej..." onkeypress="obsluzEnterSzukania(event, 'shop')">
-                <select id="quick-sort-shop" class="quick-sort-select" title="Szybkie sortowanie">
-                    <option value="default">Sortuj</option>
-                    <option value="price-asc">Cena: od najniższej</option>
-                    <option value="price-desc">Cena: od najwyższej</option>
-                    <option value="popularity">Popularność</option>
-                    <option value="newest">Najnowsze</option>
-                </select>
                 <button class="search-btn" onclick="wykonajWyszukiwanie('shop')" title="Szukaj" style="width: 42px; height: 42px; font-size: 1.1em;">🔍</button>
             </div>
             <button class="open-modal-btn" onclick="otworzModalSortowania()">⚙️ Sortuj i Filtruj</button>
@@ -706,7 +790,7 @@
 
             <div class="modal-section">
                 <label for="modal-sort-select">Sortuj według:</label>
-                <select id="modal-sort-select" onchange="zmienSortowanieWModal()">
+                <select id="modal-sort-select" onchange="zastosujFiltryISortowanie()">
                     <option value="default">Domyślnie</option>
                     <option value="price-asc">Cena: od najniższej</option>
                     <option value="price-desc">Cena: od najwyższej</option>
@@ -816,8 +900,25 @@
 
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #ccc;">
 
+            <!-- ZAKŁADKA REKLAMA / ASORTYMENT (KARUZELA) -->
             <div class="admin-section-box" style="border-color: #ffcb05;">
-                <h3 style="color: #1a1a2e; margin-top: 0;">🎛️ Ustawienia Maksymalnej Ceny w Wyszukiwarce</h3>
+                <h3 style="color: #1a1a2e; margin-top: 0;">📢 Zarządzanie Banerami / Reklamą w Karuzeli</h3>
+                <p style="color: #666; font-size: 0.95em; margin-bottom: 15px;">Dodaj linki do zdjęć i opisy, które będą się przewijać na stronie głównej:</p>
+                <div class="form-group">
+                    <label>Link do zdjęcia (URL baneru):</label>
+                    <input type="text" id="admin-promo-img" placeholder="https://images.unsplash.com/...">
+                </div>
+                <div class="form-group">
+                    <label>Tekst / Opis baneru (Asortyment):</label>
+                    <input type="text" id="admin-promo-title" placeholder="np. Nowa dostawa Booster Boxów!">
+                </div>
+                <button class="btn-primary" style="width: 100%; border-radius: 8px; font-size: 1.05em; background-color: #ffcb05; color: #000; font-weight: bold; border: none; padding: 12px;" onclick="dodajBannerDoKaruzeli()">+ Dodaj baner do karuzeli</button>
+                
+                <div id="admin-carousel-items-list" style="margin-top: 20px;"></div>
+            </div>
+
+            <div class="admin-section-box" style="border-color: #ffcb05;">
+                <h3 style="color: #1a1a2e; margin-top: 0;">🎛️ Maksymalna Cena w Suwaku</h3>
                 <div class="form-group">
                     <label>Najwyższa cena możliwa do ustawienia na suwaku (zł):</label>
                     <input type="number" step="10" id="admin-max-price-limit" placeholder="np. 1500">
@@ -949,6 +1050,12 @@
             }
         ];
 
+        let promoBanery = JSON.parse(localStorage.getItem('tcg_promo_banery')) || [
+            { id: 1, zdjecie: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80", tytul: "Elite Trainer Box 30th Anniversary - Sprawdź nowości!" },
+            { id: 2, zdjecie: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=800&q=80", tytul: "Wielka dostawa Booster Boxów z nowej serii!" },
+            { id: 3, zdjecie: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80", tytul: "Pojedyncze Boostery i akcesoria w super cenach!" }
+        ];
+
         let ustawieniaWysylki = JSON.parse(localStorage.getItem('tcg_wysylka')) || {
             koszt: 15.00,
             progDarmowej: 200.00
@@ -970,10 +1077,15 @@
         let wyblanyProdukt = null;
         let aktualnaFrazaSzukania = "";
 
+        // Stan karuzeli
+        let aktualnySlajdIndex = 0;
+        let karuzelaTimer = null;
+
         renderujDaneKontaktoweStart();
         aktualizujWidokKonta();
         aktualizujLicznik();
         aktualizujLicznikUlubionych();
+        inicjalizujKaruzele();
 
         function zapiszStan() {
             localStorage.setItem('tcg_produkty', JSON.stringify(produkty));
@@ -981,12 +1093,136 @@
             localStorage.setItem('tcg_wysylka', JSON.stringify(ustawieniaWysylki));
             localStorage.setItem('tcg_kontakt', JSON.stringify(daneKontaktowe));
             localStorage.setItem('tcg_ustawienia_sklepu', JSON.stringify(ustawieniaSklepu));
+            localStorage.setItem('tcg_promo_banery', JSON.stringify(promoBanery));
             localStorage.setItem('tcg_ulubione', JSON.stringify(ulubioneIds));
             if (zalogowanyUzytkownik) {
                 localStorage.setItem('tcg_zalogowany', JSON.stringify(zalogowanyUzytkownik));
             } else {
                 localStorage.removeItem('tcg_zalogowany');
             }
+        }
+
+        /* OBSŁUGA KARUZELI REKLAMOWEJ (SLIDERA) */
+        function inicjalizujKaruzele() {
+            const wrapper = document.getElementById('carousel-slides-wrapper');
+            const dotsContainer = document.getElementById('carousel-dots-container');
+            
+            if (!wrapper || !dotsContainer) return;
+
+            wrapper.innerHTML = '';
+            dotsContainer.innerHTML = '';
+
+            if (promoBanery.length === 0) {
+                wrapper.innerHTML = '<div class="carousel-slide active"><div style="padding: 100px; color: #888;">Brak banerów reklamowych w asortymencie. Dodaj je w Panelu Admina.</div></div>';
+                return;
+            }
+
+            promoBanery.forEach((baner, idx) => {
+                // Slajd
+                const slide = document.createElement('div');
+                slide.className = `carousel-slide ${idx === 0 ? 'active' : ''}`;
+                slide.innerHTML = `
+                    <img src="${baner.zdjecie}" alt="${baner.tytul}">
+                    <div class="caption">${baner.tytul}</div>
+                `;
+                wrapper.appendChild(slide);
+
+                // Kropeczka
+                const dot = document.createElement('div');
+                dot.className = `carousel-dot ${idx === 0 ? 'active' : ''}`;
+                dot.onclick = () => ustawSlajdKaruzeli(idx);
+                dotsContainer.appendChild(dot);
+            });
+
+            aktualnySlajdIndex = 0;
+            uruchomAutomatycznaKaruzele();
+        }
+
+        function uruchomAutomatycznaKaruzele() {
+            if (karuzelaTimer) clearInterval(karuzelaTimer);
+            karuzelaTimer = setInterval(() => {
+                zmienSlajdKaruzeli(1);
+            }, 10000); // co 10 sekund
+        }
+
+        function zmienSlajdKaruzeli(kierunek) {
+            if (promoBanery.length === 0) return;
+            aktualnySlajdIndex += kierunek;
+            if (aktualnySlajdIndex >= promoBanery.length) {
+                aktualnySlajdIndex = 0;
+            } else if (aktualnySlajdIndex < 0) {
+                aktualnySlajdIndex = promoBanery.length - 1;
+            }
+            pokazSlajd(aktualnySlajdIndex);
+            uruchomAutomatycznaKaruzele(); // reset timera
+        }
+
+        function ustawSlajdKaruzeli(index) {
+            aktualnySlajdIndex = index;
+            pokazSlajd(aktualnySlajdIndex);
+            uruchomAutomatycznaKaruzele();
+        }
+
+        function pokazSlajd(index) {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.carousel-dot');
+
+            slides.forEach((slide, idx) => {
+                slide.classList.remove('active');
+                if (idx === index) slide.classList.add('active');
+            });
+
+            dots.forEach((dot, idx) => {
+                dot.classList.remove('active');
+                if (idx === index) dot.classList.add('active');
+            });
+        }
+
+        function dodajBannerDoKaruzeli() {
+            const zdjecie = document.getElementById('admin-promo-img').value.trim();
+            const tytul = document.getElementById('admin-promo-title').value.trim();
+
+            if (!zdjecie || !tytuł) {
+                alert("Wypełnij link do zdjęcia oraz opis baneru!");
+                return;
+            }
+
+            const nowyId = promoBanery.length > 0 ? Math.max(...promoBanery.map(b => b.id)) + 1 : 1;
+            promoBanery.push({ id: nowyId, zdjecie, tytul });
+            zapiszStan();
+
+            document.getElementById('admin-promo-img').value = '';
+            document.getElementById('admin-promo-title').value = '';
+
+            alert("Baner został dodany do karuzeli reklamowej!");
+            renderujAdminListaBanerow();
+            inicjalizujKaruzele();
+        }
+
+        function usunBannerKaruzeli(id) {
+            promoBanery = promoBanery.filter(b => b.id !== id);
+            zapiszStan();
+            renderujAdminListaBanerow();
+            inicjalizujKaruzele();
+        }
+
+        function renderujAdminListaBanerow() {
+            const container = document.getElementById('admin-carousel-items-list');
+            if (!container) return;
+            container.innerHTML = '<h4>Aktualne banery w karuzeli:</h4>';
+            
+            promoBanery.forEach(b => {
+                const item = document.createElement('div');
+                item.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #ddd;";
+                item.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="${b.zdjecie}" style="width: 50px; height: 35px; object-fit: cover; border-radius: 4px;">
+                        <span style="font-size: 0.9em; font-weight: bold;">${b.tytul}</span>
+                    </div>
+                    <button class="btn-delete" style="padding: 5px 10px; font-size: 0.85em;" onclick="usunBannerKaruzeli(${b.id})">Usuń</button>
+                `;
+                container.appendChild(item);
+            });
         }
 
         /* STEROWANIE MODALEM SORTOWANIA */
@@ -997,35 +1233,16 @@
             document.getElementById('sort-filter-modal').style.display = 'none';
         }
 
-        function zmienSortowanieWModal() {
-            const val = document.getElementById('modal-sort-select').value;
-            // Synchronizuj oba selecty szybkiego sortowania
-            document.getElementById('quick-sort-home').value = val;
-            document.getElementById('quick-sort-shop').value = val;
-            zastosujFiltryISortowanie();
-        }
-
-        function synchronizujSelectySortowania(wybranaWartosc) {
-            document.getElementById('quick-sort-home').value = wybranaWartosc;
-            document.getElementById('quick-sort-shop').value = wybranaWartosc;
-            document.getElementById('modal-sort-select').value = wybranaWartosc;
-        }
-
         /* WYSZUKIWANIE */
         function wykonajWyszukiwanie(zrodlo) {
             let fraza = "";
-            let wybraneSortowanie = "default";
-
             if (zrodlo === 'home') {
                 fraza = document.getElementById('search-input').value.trim().toLowerCase();
-                wybraneSortowanie = document.getElementById('quick-sort-home').value;
             } else {
                 fraza = document.getElementById('search-input-shop').value.trim().toLowerCase();
-                wybraneSortowanie = document.getElementById('quick-sort-shop').value;
             }
 
             aktualnaFrazaSzukania = fraza;
-            synchronizujSelectySortowania(wybraneSortowanie);
             
             ukryjEkrany();
             document.getElementById('shop-screen').style.display = 'block';
@@ -1417,6 +1634,7 @@
                 usersSection.style.display = "none";
             }
 
+            renderujAdminListaBanerow();
             renderujAdminListaProduktow();
             window.scrollTo(0, 0);
         }
@@ -1575,6 +1793,7 @@
             ukryjEkrany();
             document.getElementById('home-screen').style.display = 'block';
             document.getElementById('search-input').value = '';
+            inicjalizujKaruzele();
             window.scrollTo(0, 0);
         }
 
@@ -1591,6 +1810,7 @@
         }
 
         function ukryjEkrany() {
+            if (karuzelaTimer) clearInterval(karuzelaTimer);
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('shop-screen').style.display = 'none';
             document.getElementById('favorites-screen').style.display = 'none';
